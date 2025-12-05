@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Better Than Fresh - Version Gallery</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #0a1628 0%, #1a3a52 50%, #0d2035 100%);
+            min-height: 100vh;
+            color: #e0f4ff;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #4FC3F7, #80DEEA, #B2EBF2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #7eb8c9;
+            margin-bottom: 3rem;
+            font-size: 1.2rem;
+        }
+
+        .versions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+        }
+
+        .version-card {
+            background: linear-gradient(145deg, #0d1b2a, #0a1520);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow:
+                12px 12px 24px #060d14,
+                -12px -12px 24px #14293d,
+                inset 0 1px 0 rgba(255,255,255,0.05);
+            border: 1px solid rgba(79, 195, 247, 0.1);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .version-card:hover {
+            transform: translateY(-8px);
+            box-shadow:
+                16px 16px 32px #060d14,
+                -16px -16px 32px #14293d,
+                0 0 40px rgba(79, 195, 247, 0.2);
+        }
+
+        .preview {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-bottom: 1px solid rgba(79, 195, 247, 0.1);
+        }
+
+        .preview-placeholder {
+            width: 100%;
+            height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            background: linear-gradient(135deg, #1a3a52, #0d2035);
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        .version-title {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #4FC3F7;
+        }
+
+        .version-desc {
+            color: #9eb8c7;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-tag {
+            background: rgba(79, 195, 247, 0.15);
+            color: #80DEEA;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            border: 1px solid rgba(79, 195, 247, 0.2);
+        }
+
+        .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #4FC3F7, #29B6F6);
+            color: #0a1628;
+            padding: 0.8rem 2rem;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(79, 195, 247, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(79, 195, 247, 0.5);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(79, 195, 247, 0.1);
+            color: #6a8a9a;
+        }
+
+        .signature {
+            color: #4FC3F7;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>>fresh:) Versions</h1>
+        <p class="subtitle">Better Than Fresh - Visual Experience Gallery</p>
+
+        <div class="versions">
+            <!-- Sacred Lotus Mandala Version -->
+            <div class="version-card">
+                <div class="preview-placeholder" style="background: linear-gradient(135deg, #2a1a4a, #4a2a6a, #1a3a52);">
+                    🪷
+                </div>
+                <div class="card-content">
+                    <h2 class="version-title">Sacred Lotus Mandala</h2>
+                    <p class="version-desc">
+                        The ultimate chaos-to-structure experience. Watch as turbulent ocean chaos
+                        transforms into a beautiful geometric lotus mandala with sacred geometry patterns,
+                        glowing petals, and radiating rays.
+                    </p>
+                    <div class="features">
+                        <span class="feature-tag">Geometric Mandala</span>
+                        <span class="feature-tag">Sacred Geometry</span>
+                        <span class="feature-tag">36 Petals</span>
+                        <span class="feature-tag">24 Rays</span>
+                        <span class="feature-tag">Golden Center</span>
+                    </div>
+                    <a href="sacred-lotus-mandala/" class="btn">View Sacred Lotus</a>
+                </div>
+            </div>
+
+            <!-- Original Chaos Noise Version -->
+            <div class="version-card">
+                <div class="preview-placeholder" style="background: linear-gradient(135deg, #1a4a3a, #2a5a4a, #1a3a52);">
+                    🌊
+                </div>
+                <div class="card-content">
+                    <h2 class="version-title">Original Chaos Noise</h2>
+                    <p class="version-desc">
+                        The original oceanic chaos visualization. Features turbulent teal/green noise
+                        patterns that transform into structured purple waves with fish school dynamics
+                        and subtle lotus patterns emerging.
+                    </p>
+                    <div class="features">
+                        <span class="feature-tag">Simplex Noise</span>
+                        <span class="feature-tag">Fish Schools</span>
+                        <span class="feature-tag">Ocean Depths</span>
+                        <span class="feature-tag">Wave Patterns</span>
+                        <span class="feature-tag">Organic Flow</span>
+                    </div>
+                    <a href="original-chaos-noise/" class="btn">View Original</a>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p class="signature">A Paul Phillips Manifestation</p>
+            <p>Better Than Fresh - Premium Central American Seafood</p>
+            <p>&copy; 2025 Paul Phillips - Clear Seas Solutions LLC</p>
+        </footer>
+    </div>
+</body>
+</html>
