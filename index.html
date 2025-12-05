@@ -107,11 +107,11 @@
             will-change: transform, opacity;
         }
 
-        .parallax-layer--bg { opacity: 0.4; filter: blur(1px); }
-        .parallax-layer--shadow { opacity: 0.5; }
-        .parallax-layer--content { opacity: 0.6; }
-        .parallax-layer--highlight { opacity: 0.5; mix-blend-mode: screen; }
-        .parallax-layer--accent { opacity: 0.4; mix-blend-mode: overlay; }
+        .parallax-layer--bg { opacity: 0.6; filter: blur(1px); }
+        .parallax-layer--shadow { opacity: 0.7; }
+        .parallax-layer--content { opacity: 0.8; }
+        .parallax-layer--highlight { opacity: 0.7; mix-blend-mode: screen; }
+        .parallax-layer--accent { opacity: 0.6; mix-blend-mode: soft-light; }
 
         .mandala-lantern {
             position: absolute;
@@ -1184,21 +1184,25 @@
                         // Combined pattern
                         float pattern = chaos * 0.5 + school + lotus;
 
-                        // Color with more saturation and brightness
-                        float hueShift = uHue + pattern * 0.15;
-                        float saturation = 0.5 + structure * 0.3;
-                        float brightness = 0.25 + abs(pattern) * 0.4 + structure * 0.15;
+                        // DRAMATICALLY brighter colors
+                        float hueShift = uHue + pattern * 0.2;
+                        float saturation = 0.6 + structure * 0.3;
+                        float brightness = 0.4 + abs(pattern) * 0.5 + structure * 0.2;
 
                         vec3 color = hsv2rgb(vec3(hueShift, saturation, brightness));
 
-                        // Dramatic vignette
-                        float vignette = 1.0 - length(uv - 0.5) * 0.6;
+                        // Add glow effect
+                        float glow = smoothstep(0.3, 0.0, abs(pattern - 0.5)) * 0.3;
+                        color += glow * vec3(0.3, 0.6, 0.9);
+
+                        // Soft vignette
+                        float vignette = 1.0 - length(uv - 0.5) * 0.4;
                         color *= vignette;
 
-                        // Depth gradient (darker at top = deeper water)
-                        color *= (0.7 + uv.y * 0.5);
+                        // Depth gradient (lighter at bottom = surface)
+                        color *= (0.8 + uv.y * 0.4);
 
-                        gl_FragColor = vec4(color, 0.85);
+                        gl_FragColor = vec4(color, 1.0);
                     }
                 `;
                 const vs = this.compileShader(gl.VERTEX_SHADER, vsSource);
@@ -1286,19 +1290,19 @@
                         petal.setAttribute('rx', rx);
                         petal.setAttribute('ry', ry);
                         petal.setAttribute('transform', `rotate(${(angle * 180 / Math.PI)})`);
-                        petal.setAttribute('fill', 'none');
-                        petal.setAttribute('stroke', `hsla(${hue}, 70%, 65%, 0.7)`);
-                        petal.setAttribute('stroke-width', '1');
+                        petal.setAttribute('fill', `hsla(${hue}, 60%, 50%, 0.15)`);
+                        petal.setAttribute('stroke', `hsla(${hue}, 80%, 75%, 0.9)`);
+                        petal.setAttribute('stroke-width', '1.5');
                         group.appendChild(petal);
                     }
 
                     const center = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
                     center.setAttribute('cx', 0);
                     center.setAttribute('cy', 0);
-                    center.setAttribute('r', Math.max(3, radius * 0.2));
-                    center.setAttribute('fill', `hsla(${hue}, 60%, 50%, 0.2)`);
-                    center.setAttribute('stroke', `hsla(${hue}, 70%, 60%, 0.6)`);
-                    center.setAttribute('stroke-width', '0.8');
+                    center.setAttribute('r', Math.max(4, radius * 0.25));
+                    center.setAttribute('fill', `hsla(${hue}, 70%, 60%, 0.3)`);
+                    center.setAttribute('stroke', `hsla(${hue}, 80%, 70%, 0.8)`);
+                    center.setAttribute('stroke-width', '1.2');
                     group.appendChild(center);
                     svg.appendChild(group);
                 }
