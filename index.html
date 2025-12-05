@@ -1,0 +1,1742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Better Than >FRESH: | Premium Central American Seafood</title>
+    <meta name="description" content="Premium seafood from Panama & Central America. Tradition, Intelligence, Integrity, Craft - proving fresh isn't about proximity, it's about expertise.">
+
+    <!-- Fonts: Avoiding Inter per frontend-design skill - using distinctive choices -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <!-- GSAP + ScrollTrigger + SplitText -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <style>
+        /* ═══════════════════════════════════════════════════════════════════════
+           CSS CUSTOM PROPERTIES - Oceanic Emergence Color System
+           ═══════════════════════════════════════════════════════════════════════ */
+        :root {
+            /* Ocean Depth Gradient - Dark to Light */
+            --ocean-abyss: #050A12;
+            --ocean-deep: #0A2540;
+            --ocean-mid: #1A3A52;
+            --ocean-light: #2C5F7F;
+            --aqua-bright: #4FC3F7;
+            --aqua-soft: #80DEEA;
+            --aqua-glow: #B2EBF2;
+            --sand-warm: #F5F3EF;
+            --sand-light: #FAFAF8;
+
+            /* Lotus Accent Colors */
+            --lotus-pink: #E8B4B8;
+            --lotus-gold: #D4AF37;
+            --lotus-cream: #FFF8E7;
+
+            /* Neoskeuomorphic System */
+            --neoskeu-bg: #0D1B2A;
+            --neoskeu-shadow-dark: #060D14;
+            --neoskeu-shadow-light: #14293D;
+            --neoskeu-highlight: rgba(79, 195, 247, 0.08);
+
+            /* Typography Scale */
+            --font-display: 'Cormorant Garamond', Georgia, serif;
+            --font-body: 'Work Sans', -apple-system, sans-serif;
+
+            /* Spacing */
+            --space-xs: 0.5rem;
+            --space-sm: 1rem;
+            --space-md: 2rem;
+            --space-lg: 4rem;
+            --space-xl: 8rem;
+
+            /* Transitions */
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+            --ease-in-out-sine: cubic-bezier(0.37, 0, 0.63, 1);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════
+           RESET & BASE
+           ═══════════════════════════════════════════════════════════════════════ */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--ocean-abyss);
+            color: var(--sand-warm);
+            line-height: 1.7;
+            overflow-x: hidden;
+            transition: background-color 1.2s var(--ease-out-expo);
+        }
+
+        body.mode-light {
+            background: var(--sand-light);
+            color: var(--ocean-deep);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════
+           PARALLAX MANDALA LANTERN SYSTEM - 5 Layers
+           ═══════════════════════════════════════════════════════════════════════ */
+        .parallax-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .parallax-layer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            will-change: transform, opacity;
+        }
+
+        /* Layer 1: Deep Background - Slow moving mandalas */
+        .parallax-layer--bg {
+            opacity: 0.12;
+            filter: blur(2px);
+        }
+
+        /* Layer 2: Shadow depth */
+        .parallax-layer--shadow {
+            opacity: 0.18;
+            filter: blur(1px);
+        }
+
+        /* Layer 3: Content layer */
+        .parallax-layer--content {
+            opacity: 0.25;
+        }
+
+        /* Layer 4: Highlight layer */
+        .parallax-layer--highlight {
+            opacity: 0.15;
+            mix-blend-mode: screen;
+        }
+
+        /* Layer 5: Accent particles */
+        .parallax-layer--accent {
+            opacity: 0.08;
+            mix-blend-mode: overlay;
+        }
+
+        /* Mandala Lantern SVG Pattern */
+        .mandala-lantern {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            animation: mandala-float 20s ease-in-out infinite;
+        }
+
+        .mandala-lantern svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        @keyframes mandala-float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(3deg); }
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════
+           WEBGL OCEAN CANVAS - Chaos to Structure Visualizer
+           ═══════════════════════════════════════════════════════════════════════ */
+        #ocean-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.6;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════
+           NEOSKEUOMORPHIC CARD SYSTEM
+           ═══════════════════════════════════════════════════════════════════════ */
+        .neoskeu-card {
+            background: linear-gradient(145deg, var(--neoskeu-bg), #0a1520);
+            border-radius: 24px;
+            padding: var(--space-lg);
+            box-shadow:
+                12px 12px 24px var(--neoskeu-shadow-dark),
+                -12px -12px 24px var(--neoskeu-shadow-light),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(79, 195, 247, 0.08);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s var(--ease-out-expo);
+        }
+
+        .neoskeu-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg,
+                transparent 0%,
+                rgba(79, 195, 247, 0.3) 50%,
+                transparent 100%);
+        }
+
+        .neoskeu-card:hover {
+            transform: translateY(-4px);
+            box-shadow:
+                16px 16px 32px var(--neoskeu-shadow-dark),
+                -16px -16px 32px var(--neoskeu-shadow-light),
+                inset 0 1px 0 rgba(255, 255, 255, 0.08),
+                0 0 60px rgba(79, 195, 247, 0.1);
+        }
+
+        /* Pressed state for interactivity */
+        .neoskeu-card--pressed {
+            box-shadow:
+                inset 6px 6px 12px var(--neoskeu-shadow-dark),
+                inset -6px -6px 12px var(--neoskeu-shadow-light);
+        }
+
+        /* Light mode neoskeuomorphic */
+        body.mode-light .neoskeu-card {
+            background: linear-gradient(145deg, #ffffff, #e6e6e6);
+            box-shadow:
+                12px 12px 24px #d1d1d1,
+                -12px -12px 24px #ffffff,
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            border-color: rgba(10, 37, 64, 0.08);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════
+           TYPOGRAPHY - Oceanic Emergence Style
+           ═══════════════════════════════════════════════════════════════════════ */
+        .display-xl {
+            font-family: var(--font-display);
+            font-size: clamp(3.5rem, 10vw, 9rem);
+            font-weight: 300;
+            letter-spacing: -0.03em;
+            line-height: 0.95;
+        }
+
+        .display-lg {
+            font-family: var(--font-display);
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            font-weight: 400;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+        }
+
+        .display-md {
+            font-family: var(--font-display);
+            font-size: clamp(1.75rem, 4vw, 3rem);
+            font-weight: 500;
+            letter-spacing: -0.01em;
+            line-height: 1.2;
+        }
+
+        .body-lg {
+            font-family: var(--font-body);
+            font-size: clamp(1.125rem, 2vw, 1.375rem);
+            font-weight: 300;
+            line-height: 1.8;
+        }
+
+        .body-md {
+            font-family: var(--font-body);
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.7;
+        }
+
+        .label {
+            font-family: var(--font-body);
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+        }
+
+        /* Text reveal animation containers */
+        .text-reveal {
+            overflow: hidden;
+        }
+
+        .text-reveal .line {
+            display: block;
+            transform: translateY(100%);
+            opacity: 0;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════
+           SECTION STRUCTURE
+           ═══════════════════════════════════════════════════════════════════════ */
+        .section {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 800vh Locked Experience Sections */
+        .section--locked {
+            height: 800vh;
+            position: relative;
+        }
+
+        .section__viewport {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* Standard scrolling sections */
+        .section--scroll {
+            min-height: 100vh;
+            padding: var(--space-xl) var(--space-md);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════
+           HERO SECTION - 800vh Chaos to Structure Experience
+           ═══════════════════════════════════════════════════════════════════════ */
+        #hero {
+            background: transparent;
+        }
+
+        .hero__content {
+            text-align: center;
+            max-width: 1200px;
+            padding: var(--space-md);
+            position: relative;
+            z-index: 10;
+        }
+
+        .hero__logo {
+            font-family: var(--font-display);
+            font-size: clamp(4rem, 12vw, 12rem);
+            font-weight: 300;
+            color: var(--aqua-bright);
+            margin-bottom: var(--space-sm);
+            opacity: 0;
+            transform: scale(0.8);
+        }
+
+        .hero__logo .fish-symbol {
+            display: inline-block;
+            animation: fish-swim 3s ease-in-out infinite;
+        }
+
+        @keyframes fish-swim {
+            0%, 100% { transform: translateX(0) rotate(0deg); }
+            25% { transform: translateX(5px) rotate(2deg); }
+            75% { transform: translateX(-5px) rotate(-2deg); }
+        }
+
+        .hero__tagline {
+            font-family: var(--font-body);
+            font-size: clamp(1rem, 2vw, 1.5rem);
+            font-weight: 300;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--aqua-soft);
+            opacity: 0;
+            margin-bottom: var(--space-lg);
+        }
+
+        .hero__statement {
+            max-width: 800px;
+            margin: 0 auto var(--space-lg);
+        }
+
+        .hero__pillars {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--space-md);
+            max-width: 1000px;
+            margin: 0 auto;
+            opacity: 0;
+        }
+
+        @media (max-width: 768px) {
+            .hero__pillars {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .pillar {
+            text-align: center;
+            padding: var(--space-md);
+        }
+
+        .pillar__icon {
+            font-size: 2.5rem;
+            margin-bottom: var(--space-sm);
+            opacity: 0.8;
+        }
+
+        .pillar__title {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            font-weight: 500;
+            margin-bottom: var(--space-xs);
+            color: var(--aqua-bright);
+        }
+
+        .pillar__desc {
+            font-size: 0.875rem;
+            opacity: 0.7;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════
+           ABOUT SECTION - Fisheries Story
+           ═══════════════════════════════════════════════════════════════════════ */
+        #about {
+            background: linear-gradient(180deg,
+                transparent 0%,
+                var(--ocean-deep) 20%,
+                var(--ocean-mid) 80%,
+                transparent 100%);
+        }
+
+        .about__grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-xl);
+            max-width: 1400px;
+            margin: 0 auto;
+            align-items: center;
+        }
+
+        @media (max-width: 968px) {
+            .about__grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .about__visual {
+            position: relative;
+            height: 500px;
+            border-radius: 24px;
+            overflow: hidden;
+        }
+
+        .about__image-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg,
+                var(--ocean-light) 0%,
+                var(--ocean-deep) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════
+           PRODUCTS CAROUSEL - GSAP Scroll Choreographed
+           ═══════════════════════════════════════════════════════════════════════ */
+        #products {
+            padding: var(--space-xl) 0;
+            overflow: hidden;
+        }
+
+        .products__header {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto var(--space-xl);
+            padding: 0 var(--space-md);
+        }
+
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .carousel-track {
+            display: flex;
+            gap: var(--space-md);
+            padding: var(--space-md);
+            will-change: transform;
+        }
+
+        .product-card {
+            flex: 0 0 350px;
+            height: 500px;
+            position: relative;
+        }
+
+        .product-card__inner {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-card__image {
+            flex: 1;
+            background: linear-gradient(135deg,
+                var(--ocean-mid) 0%,
+                var(--ocean-deep) 100%);
+            border-radius: 16px 16px 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-card__image::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(to top, var(--ocean-deep), transparent);
+        }
+
+        .product-card__info {
+            padding: var(--space-md);
+            background: var(--neoskeu-bg);
+            border-radius: 0 0 16px 16px;
+        }
+
+        .product-card__name {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 500;
+            margin-bottom: var(--space-xs);
+            color: var(--aqua-bright);
+        }
+
+        .product-card__origin {
+            font-size: 0.875rem;
+            opacity: 0.6;
+            margin-bottom: var(--space-sm);
+        }
+
+        .product-card__tags {
+            display: flex;
+            gap: var(--space-xs);
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            font-size: 0.7rem;
+            padding: 4px 10px;
+            background: rgba(79, 195, 247, 0.15);
+            border: 1px solid rgba(79, 195, 247, 0.3);
+            border-radius: 20px;
+            color: var(--aqua-soft);
+        }
+
+        /* Carousel Navigation */
+        .carousel-nav {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-sm);
+            margin-top: var(--space-lg);
+        }
+
+        .carousel-nav__btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid var(--aqua-bright);
+            background: transparent;
+            color: var(--aqua-bright);
+            cursor: pointer;
+            transition: all 0.3s var(--ease-out-expo);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .carousel-nav__btn:hover {
+            background: var(--aqua-bright);
+            color: var(--ocean-deep);
+            transform: scale(1.1);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════
+           CONTACT SECTION - 800vh Locked Footer Experience
+           ═══════════════════════════════════════════════════════════════════════ */
+        #contact {
+            background: linear-gradient(180deg,
+                transparent 0%,
+                var(--ocean-abyss) 30%);
+        }
+
+        .contact__content {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: var(--space-md);
+        }
+
+        .contact__form {
+            display: grid;
+            gap: var(--space-md);
+            margin-top: var(--space-lg);
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: var(--space-md);
+            background: var(--neoskeu-bg);
+            border: 1px solid rgba(79, 195, 247, 0.2);
+            border-radius: 12px;
+            color: var(--sand-warm);
+            font-family: var(--font-body);
+            font-size: 1rem;
+            transition: all 0.3s var(--ease-out-expo);
+            box-shadow:
+                inset 4px 4px 8px var(--neoskeu-shadow-dark),
+                inset -4px -4px 8px var(--neoskeu-shadow-light);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--aqua-bright);
+            box-shadow:
+                inset 4px 4px 8px var(--neoskeu-shadow-dark),
+                inset -4px -4px 8px var(--neoskeu-shadow-light),
+                0 0 20px rgba(79, 195, 247, 0.2);
+        }
+
+        .form-input::placeholder {
+            color: rgba(245, 243, 239, 0.4);
+        }
+
+        textarea.form-input {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .btn-primary {
+            padding: var(--space-md) var(--space-lg);
+            background: linear-gradient(135deg, var(--aqua-bright), var(--ocean-light));
+            border: none;
+            border-radius: 12px;
+            color: var(--ocean-deep);
+            font-family: var(--font-body);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s var(--ease-out-expo);
+            box-shadow:
+                0 4px 15px rgba(79, 195, 247, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow:
+                0 8px 25px rgba(79, 195, 247, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════
+           FOOTER
+           ═══════════════════════════════════════════════════════════════════════ */
+        .footer {
+            padding: var(--space-xl) var(--space-md);
+            text-align: center;
+            background: var(--ocean-abyss);
+            border-top: 1px solid rgba(79, 195, 247, 0.1);
+        }
+
+        .footer__logo {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            color: var(--aqua-bright);
+            margin-bottom: var(--space-md);
+        }
+
+        .footer__links {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-lg);
+            margin-bottom: var(--space-md);
+            flex-wrap: wrap;
+        }
+
+        .footer__link {
+            color: var(--sand-warm);
+            text-decoration: none;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+
+        .footer__link:hover {
+            opacity: 1;
+            color: var(--aqua-bright);
+        }
+
+        .footer__copyright {
+            font-size: 0.875rem;
+            opacity: 0.5;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════
+           SCROLL PROGRESS INDICATOR
+           ═══════════════════════════════════════════════════════════════════════ */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--aqua-bright), var(--lotus-gold));
+            transform-origin: left;
+            transform: scaleX(0);
+            z-index: 9999;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════
+           REACTIVE HOVER RIPPLE EFFECT
+           ═══════════════════════════════════════════════════════════════════════ */
+        .ripple-container {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(79, 195, 247, 0.3) 0%, transparent 70%);
+            transform: scale(0);
+            pointer-events: none;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════
+           LOADING SCREEN - Chaos State
+           ═══════════════════════════════════════════════════════════════════════ */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--ocean-abyss);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            transition: opacity 0.8s var(--ease-out-expo), visibility 0.8s;
+        }
+
+        .loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader__content {
+            text-align: center;
+        }
+
+        .loader__fish {
+            font-size: 4rem;
+            animation: loader-swim 2s ease-in-out infinite;
+        }
+
+        @keyframes loader-swim {
+            0%, 100% { transform: translateX(-20px) rotate(-5deg); }
+            50% { transform: translateX(20px) rotate(5deg); }
+        }
+
+        .loader__text {
+            margin-top: var(--space-md);
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            color: var(--aqua-soft);
+            opacity: 0.7;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════
+           RESPONSIVE ADJUSTMENTS
+           ═══════════════════════════════════════════════════════════════════════ */
+        @media (max-width: 768px) {
+            :root {
+                --space-lg: 2rem;
+                --space-xl: 4rem;
+            }
+
+            .section--locked {
+                height: 500vh;
+            }
+
+            .product-card {
+                flex: 0 0 280px;
+            }
+        }
+
+        /* Reduced motion preference */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loader" id="loader">
+        <div class="loader__content">
+            <div class="loader__fish">>fresh:)</div>
+            <div class="loader__text">Emerging from the depths...</div>
+        </div>
+    </div>
+
+    <!-- Scroll Progress -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+
+    <!-- Parallax Mandala Layers -->
+    <div class="parallax-container" id="parallaxContainer">
+        <div class="parallax-layer parallax-layer--bg" id="layer1"></div>
+        <div class="parallax-layer parallax-layer--shadow" id="layer2"></div>
+        <div class="parallax-layer parallax-layer--content" id="layer3"></div>
+        <div class="parallax-layer parallax-layer--highlight" id="layer4"></div>
+        <div class="parallax-layer parallax-layer--accent" id="layer5"></div>
+    </div>
+
+    <!-- WebGL Ocean Canvas -->
+    <canvas id="ocean-canvas"></canvas>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         HERO SECTION - 800vh Locked Experience
+         ═══════════════════════════════════════════════════════════════════════ -->
+    <section id="hero" class="section section--locked" data-mode="dark">
+        <div class="section__viewport">
+            <div class="hero__content">
+                <div class="hero__logo" id="heroLogo">
+                    <span class="fish-symbol">>fresh</span>:)
+                </div>
+                <div class="hero__tagline" id="heroTagline">
+                    Better Than Fresh
+                </div>
+                <div class="hero__statement text-reveal" id="heroStatement">
+                    <p class="display-md">Premium seafood from Panama & Central America.</p>
+                    <p class="body-lg" style="margin-top: var(--space-sm); opacity: 0.8;">
+                        Proving that "fresh" isn't about proximity—it's about expertise, intelligence, and care.
+                    </p>
+                </div>
+                <div class="hero__pillars" id="heroPillars">
+                    <div class="pillar neoskeu-card">
+                        <div class="pillar__icon">🌊</div>
+                        <div class="pillar__title">Tradition</div>
+                        <div class="pillar__desc">Centuries of fishing wisdom</div>
+                    </div>
+                    <div class="pillar neoskeu-card">
+                        <div class="pillar__icon">🧠</div>
+                        <div class="pillar__title">Intelligence</div>
+                        <div class="pillar__desc">Science-driven quality</div>
+                    </div>
+                    <div class="pillar neoskeu-card">
+                        <div class="pillar__icon">✓</div>
+                        <div class="pillar__title">Integrity</div>
+                        <div class="pillar__desc">Full transparency</div>
+                    </div>
+                    <div class="pillar neoskeu-card">
+                        <div class="pillar__icon">🔨</div>
+                        <div class="pillar__title">Craft</div>
+                        <div class="pillar__desc">Expert precision</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         ABOUT SECTION - Fisheries Scrolling Story
+         ═══════════════════════════════════════════════════════════════════════ -->
+    <section id="about" class="section section--scroll" data-mode="dark">
+        <div class="about__grid">
+            <div class="about__content">
+                <span class="label" style="color: var(--aqua-bright);">Our Story</span>
+                <h2 class="display-lg text-reveal" style="margin: var(--space-sm) 0 var(--space-md);">
+                    From Central American Waters to Your Table
+                </h2>
+                <div class="body-lg text-reveal">
+                    <p style="margin-bottom: var(--space-md);">
+                        We work directly with fishing communities in Panama and across Central America,
+                        where generations of fishermen have perfected their craft on waters rich with
+                        some of the world's finest seafood.
+                    </p>
+                    <p style="margin-bottom: var(--space-md);">
+                        Our flash-freezing technology captures seafood at its absolute peak—locking
+                        in flavor, texture, and nutrition that deteriorates in traditional "fresh"
+                        handling. It's not just preservation; it's perfection.
+                    </p>
+                    <p>
+                        Every product carries full documentation from ocean to table. We believe
+                        transparency isn't just ethical—it's essential to proving why we're
+                        <em>better than fresh</em>.
+                    </p>
+                </div>
+            </div>
+            <div class="about__visual neoskeu-card">
+                <div class="about__image-placeholder">
+                    🐟
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         PRODUCTS SECTION - Carousel with GSAP Choreography
+         ═══════════════════════════════════════════════════════════════════════ -->
+    <section id="products" class="section section--scroll" data-mode="dark">
+        <div class="products__header">
+            <span class="label" style="color: var(--aqua-bright);">Our Catch</span>
+            <h2 class="display-lg text-reveal" style="margin: var(--space-sm) 0;">
+                Premium Selection
+            </h2>
+            <p class="body-lg text-reveal" style="opacity: 0.8;">
+                Each product represents the pinnacle of sustainable seafood—expertly
+                sourced, intelligently processed, delivered with integrity.
+            </p>
+        </div>
+
+        <div class="carousel-container">
+            <div class="carousel-track" id="carouselTrack">
+                <!-- Product Cards -->
+                <div class="product-card neoskeu-card">
+                    <div class="product-card__inner">
+                        <div class="product-card__image">🦐</div>
+                        <div class="product-card__info">
+                            <h3 class="product-card__name">Panama White Shrimp</h3>
+                            <p class="product-card__origin">Gulf of Chiriquí, Panama</p>
+                            <div class="product-card__tags">
+                                <span class="tag">Wild-Caught</span>
+                                <span class="tag">Flash-Frozen</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card neoskeu-card">
+                    <div class="product-card__inner">
+                        <div class="product-card__image">🐟</div>
+                        <div class="product-card__info">
+                            <h3 class="product-card__name">Corvina Sea Bass</h3>
+                            <p class="product-card__origin">Pacific Coast, Panama</p>
+                            <div class="product-card__tags">
+                                <span class="tag">Line-Caught</span>
+                                <span class="tag">Sashimi-Grade</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card neoskeu-card">
+                    <div class="product-card__inner">
+                        <div class="product-card__image">🦀</div>
+                        <div class="product-card__info">
+                            <h3 class="product-card__name">Blue Crab</h3>
+                            <p class="product-card__origin">Caribbean Coast</p>
+                            <div class="product-card__tags">
+                                <span class="tag">Sustainable</span>
+                                <span class="tag">Premium</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card neoskeu-card">
+                    <div class="product-card__inner">
+                        <div class="product-card__image">🦑</div>
+                        <div class="product-card__info">
+                            <h3 class="product-card__name">Pacific Squid</h3>
+                            <p class="product-card__origin">Deep Waters, Costa Rica</p>
+                            <div class="product-card__tags">
+                                <span class="tag">Night-Caught</span>
+                                <span class="tag">Tender</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card neoskeu-card">
+                    <div class="product-card__inner">
+                        <div class="product-card__image">🐙</div>
+                        <div class="product-card__info">
+                            <h3 class="product-card__name">Octopus</h3>
+                            <p class="product-card__origin">Gulf of Panama</p>
+                            <div class="product-card__tags">
+                                <span class="tag">Artisanal</span>
+                                <span class="tag">Tender</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card neoskeu-card">
+                    <div class="product-card__inner">
+                        <div class="product-card__image">🦞</div>
+                        <div class="product-card__info">
+                            <h3 class="product-card__name">Spiny Lobster</h3>
+                            <p class="product-card__origin">Caribbean Reefs</p>
+                            <div class="product-card__tags">
+                                <span class="tag">Reef-Caught</span>
+                                <span class="tag">Premium</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="carousel-nav">
+            <button class="carousel-nav__btn" id="prevBtn" aria-label="Previous">←</button>
+            <button class="carousel-nav__btn" id="nextBtn" aria-label="Next">→</button>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         CONTACT SECTION - 800vh Locked Footer Experience
+         ═══════════════════════════════════════════════════════════════════════ -->
+    <section id="contact" class="section section--locked" data-mode="dark">
+        <div class="section__viewport">
+            <div class="contact__content">
+                <span class="label" style="color: var(--aqua-bright);">Get In Touch</span>
+                <h2 class="display-lg text-reveal" style="margin: var(--space-sm) 0;">
+                    Let's Connect
+                </h2>
+                <p class="body-lg text-reveal" style="opacity: 0.8; margin-bottom: var(--space-lg);">
+                    Interested in premium Central American seafood for your restaurant,
+                    market, or distribution network? We'd love to hear from you.
+                </p>
+
+                <form class="contact__form" id="contactForm">
+                    <div class="form-group">
+                        <input type="text" class="form-input" placeholder="Your Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" class="form-input" placeholder="Email Address" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-input" placeholder="Company / Organization">
+                    </div>
+                    <div class="form-group">
+                        <textarea class="form-input" placeholder="Tell us about your needs..."></textarea>
+                    </div>
+                    <button type="submit" class="btn-primary">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer__logo">>fresh:)</div>
+        <nav class="footer__links">
+            <a href="#hero" class="footer__link">Home</a>
+            <a href="#about" class="footer__link">About</a>
+            <a href="#products" class="footer__link">Products</a>
+            <a href="#contact" class="footer__link">Contact</a>
+        </nav>
+        <p class="footer__copyright">
+            © 2025 Better Than Fresh — Clear Seas Solutions LLC. All rights reserved.
+        </p>
+        <p style="margin-top: var(--space-sm); font-size: 0.75rem; opacity: 0.4;">
+            A Paul Phillips Manifestation
+        </p>
+    </footer>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         JAVASCRIPT - GSAP Choreography + WebGL Ocean + Parallax System
+         ═══════════════════════════════════════════════════════════════════════ -->
+    <script>
+        // Register GSAP plugins
+        gsap.registerPlugin(ScrollTrigger);
+
+        // ═══════════════════════════════════════════════════════════════════════
+        // WEBGL OCEAN VISUALIZER - Chaos to Structure Algorithm
+        // ═══════════════════════════════════════════════════════════════════════
+        class OceanVisualizer {
+            constructor(canvas) {
+                this.canvas = canvas;
+                this.gl = canvas.getContext('webgl2') || canvas.getContext('webgl');
+                if (!this.gl) {
+                    console.warn('WebGL not supported');
+                    return;
+                }
+
+                this.params = {
+                    chaos: 1.0,        // 1.0 = full chaos, 0.0 = structured
+                    hue: 0.55,         // Ocean blue-green
+                    density: 25,
+                    speed: 0.5,
+                    scrollProgress: 0
+                };
+
+                this.time = 0;
+                this.resize();
+                this.init();
+                this.animate();
+
+                window.addEventListener('resize', () => this.resize());
+            }
+
+            resize() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+                if (this.gl) {
+                    this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
+                }
+            }
+
+            init() {
+                const gl = this.gl;
+
+                // Vertex shader
+                const vsSource = `
+                    attribute vec4 aPosition;
+                    void main() {
+                        gl_Position = aPosition;
+                    }
+                `;
+
+                // Fragment shader - Oceanic Emergence algorithm
+                const fsSource = `
+                    precision highp float;
+                    uniform vec2 uResolution;
+                    uniform float uTime;
+                    uniform float uChaos;
+                    uniform float uHue;
+                    uniform float uDensity;
+                    uniform float uSpeed;
+
+                    // Simplex-like noise
+                    vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+                    vec2 mod289(vec2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+                    vec3 permute(vec3 x) { return mod289(((x*34.0)+1.0)*x); }
+
+                    float snoise(vec2 v) {
+                        const vec4 C = vec4(0.211324865405187, 0.366025403784439,
+                                           -0.577350269189626, 0.024390243902439);
+                        vec2 i  = floor(v + dot(v, C.yy));
+                        vec2 x0 = v - i + dot(i, C.xx);
+                        vec2 i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
+                        vec4 x12 = x0.xyxy + C.xxzz;
+                        x12.xy -= i1;
+                        i = mod289(i);
+                        vec3 p = permute(permute(i.y + vec3(0.0, i1.y, 1.0)) + i.x + vec3(0.0, i1.x, 1.0));
+                        vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy), dot(x12.zw,x12.zw)), 0.0);
+                        m = m*m;
+                        m = m*m;
+                        vec3 x = 2.0 * fract(p * C.www) - 1.0;
+                        vec3 h = abs(x) - 0.5;
+                        vec3 ox = floor(x + 0.5);
+                        vec3 a0 = x - ox;
+                        m *= 1.79284291400159 - 0.85373472095314 * (a0*a0 + h*h);
+                        vec3 g;
+                        g.x = a0.x * x0.x + h.x * x0.y;
+                        g.yz = a0.yz * x12.xz + h.yz * x12.yw;
+                        return 130.0 * dot(m, g);
+                    }
+
+                    // HSV to RGB
+                    vec3 hsv2rgb(vec3 c) {
+                        vec4 K = vec4(1.0, 2.0/3.0, 1.0/3.0, 3.0);
+                        vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
+                        return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
+                    }
+
+                    // Fish school flocking pattern
+                    float fishSchool(vec2 uv, float t) {
+                        float pattern = 0.0;
+                        for (float i = 0.0; i < 5.0; i++) {
+                            vec2 offset = vec2(
+                                sin(t * 0.3 + i * 1.5) * 0.3,
+                                cos(t * 0.2 + i * 1.2) * 0.2
+                            );
+                            float school = snoise((uv + offset) * (3.0 + i * 0.5) + t * 0.1);
+                            pattern += school * (1.0 / (i + 1.0));
+                        }
+                        return pattern;
+                    }
+
+                    // Lotus/mandala radial pattern
+                    float lotusPattern(vec2 uv, float t) {
+                        vec2 centered = uv - 0.5;
+                        float angle = atan(centered.y, centered.x);
+                        float radius = length(centered);
+
+                        float petals = 8.0;
+                        float lotus = sin(angle * petals + t * 0.2) * 0.5 + 0.5;
+                        lotus *= smoothstep(0.5, 0.1, radius);
+                        lotus *= smoothstep(0.0, 0.1, radius);
+
+                        return lotus;
+                    }
+
+                    void main() {
+                        vec2 uv = gl_FragCoord.xy / uResolution.xy;
+                        float t = uTime * uSpeed;
+
+                        // Chaos to structure interpolation
+                        float structure = 1.0 - uChaos;
+
+                        // Layer 1: Turbulent chaos (diminishes with scroll)
+                        float chaos = snoise(uv * uDensity + t) * uChaos;
+                        chaos += snoise(uv * uDensity * 2.0 - t * 0.5) * uChaos * 0.5;
+
+                        // Layer 2: Fish school emergence
+                        float school = fishSchool(uv, t) * structure * 0.6;
+
+                        // Layer 3: Lotus mandala structure
+                        float lotus = lotusPattern(uv, t) * structure * 0.4;
+
+                        // Combine layers
+                        float pattern = chaos * 0.3 + school + lotus;
+
+                        // Color based on depth (scroll progress affects hue)
+                        float hueShift = uHue + pattern * 0.1;
+                        float saturation = 0.6 + structure * 0.2;
+                        float brightness = 0.15 + abs(pattern) * 0.25;
+
+                        vec3 color = hsv2rgb(vec3(hueShift, saturation, brightness));
+
+                        // Add depth gradient
+                        color *= 1.0 - uv.y * 0.3;
+
+                        // Subtle vignette
+                        float vignette = 1.0 - length(uv - 0.5) * 0.5;
+                        color *= vignette;
+
+                        gl_FragColor = vec4(color, 1.0);
+                    }
+                `;
+
+                // Compile shaders
+                const vertexShader = this.compileShader(gl.VERTEX_SHADER, vsSource);
+                const fragmentShader = this.compileShader(gl.FRAGMENT_SHADER, fsSource);
+
+                // Create program
+                this.program = gl.createProgram();
+                gl.attachShader(this.program, vertexShader);
+                gl.attachShader(this.program, fragmentShader);
+                gl.linkProgram(this.program);
+
+                if (!gl.getProgramParameter(this.program, gl.LINK_STATUS)) {
+                    console.error('Shader program failed:', gl.getProgramInfoLog(this.program));
+                    return;
+                }
+
+                // Set up geometry (fullscreen quad)
+                const positions = new Float32Array([
+                    -1, -1,  1, -1,  -1, 1,
+                    -1,  1,  1, -1,   1, 1
+                ]);
+
+                const buffer = gl.createBuffer();
+                gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+                gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
+
+                const aPosition = gl.getAttribLocation(this.program, 'aPosition');
+                gl.enableVertexAttribArray(aPosition);
+                gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);
+
+                // Get uniform locations
+                this.uniforms = {
+                    resolution: gl.getUniformLocation(this.program, 'uResolution'),
+                    time: gl.getUniformLocation(this.program, 'uTime'),
+                    chaos: gl.getUniformLocation(this.program, 'uChaos'),
+                    hue: gl.getUniformLocation(this.program, 'uHue'),
+                    density: gl.getUniformLocation(this.program, 'uDensity'),
+                    speed: gl.getUniformLocation(this.program, 'uSpeed')
+                };
+            }
+
+            compileShader(type, source) {
+                const shader = this.gl.createShader(type);
+                this.gl.shaderSource(shader, source);
+                this.gl.compileShader(shader);
+
+                if (!this.gl.getShaderParameter(shader, this.gl.COMPILE_STATUS)) {
+                    console.error('Shader compile error:', this.gl.getShaderInfoLog(shader));
+                    this.gl.deleteShader(shader);
+                    return null;
+                }
+                return shader;
+            }
+
+            setParam(name, value) {
+                this.params[name] = value;
+            }
+
+            animate() {
+                if (!this.gl || !this.program) return;
+
+                this.time += 0.016;
+                const gl = this.gl;
+
+                gl.useProgram(this.program);
+                gl.uniform2f(this.uniforms.resolution, this.canvas.width, this.canvas.height);
+                gl.uniform1f(this.uniforms.time, this.time);
+                gl.uniform1f(this.uniforms.chaos, this.params.chaos);
+                gl.uniform1f(this.uniforms.hue, this.params.hue);
+                gl.uniform1f(this.uniforms.density, this.params.density);
+                gl.uniform1f(this.uniforms.speed, this.params.speed);
+
+                gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+
+        // ═══════════════════════════════════════════════════════════════════════
+        // PARALLAX MANDALA SYSTEM
+        // ═══════════════════════════════════════════════════════════════════════
+        class MandalaParallax {
+            constructor() {
+                this.layers = [
+                    { el: document.getElementById('layer1'), speed: 0.1, mandalas: 3 },
+                    { el: document.getElementById('layer2'), speed: 0.2, mandalas: 4 },
+                    { el: document.getElementById('layer3'), speed: 0.35, mandalas: 5 },
+                    { el: document.getElementById('layer4'), speed: 0.5, mandalas: 3 },
+                    { el: document.getElementById('layer5'), speed: 0.7, mandalas: 6 }
+                ];
+
+                this.createMandalas();
+                this.setupParallax();
+            }
+
+            createMandala(size, hue) {
+                const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                svg.setAttribute('viewBox', '0 0 100 100');
+                svg.setAttribute('width', size);
+                svg.setAttribute('height', size);
+
+                const petals = 8 + Math.floor(Math.random() * 8);
+                const layers = 3 + Math.floor(Math.random() * 3);
+
+                for (let l = 0; l < layers; l++) {
+                    const radius = 45 - l * 12;
+                    const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+                    group.setAttribute('transform', 'translate(50, 50)');
+
+                    for (let i = 0; i < petals; i++) {
+                        const angle = (i / petals) * Math.PI * 2;
+                        const petal = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
+                        petal.setAttribute('cx', Math.cos(angle) * radius * 0.5);
+                        petal.setAttribute('cy', Math.sin(angle) * radius * 0.5);
+                        petal.setAttribute('rx', radius * 0.3);
+                        petal.setAttribute('ry', radius * 0.15);
+                        petal.setAttribute('transform', `rotate(${(angle * 180 / Math.PI)})`);
+                        petal.setAttribute('fill', 'none');
+                        petal.setAttribute('stroke', `hsla(${hue}, 60%, 60%, 0.3)`);
+                        petal.setAttribute('stroke-width', '0.5');
+                        group.appendChild(petal);
+                    }
+
+                    // Center circle
+                    const center = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                    center.setAttribute('cx', 0);
+                    center.setAttribute('cy', 0);
+                    center.setAttribute('r', radius * 0.2);
+                    center.setAttribute('fill', 'none');
+                    center.setAttribute('stroke', `hsla(${hue}, 50%, 50%, 0.2)`);
+                    center.setAttribute('stroke-width', '0.3');
+                    group.appendChild(center);
+
+                    svg.appendChild(group);
+                }
+
+                return svg;
+            }
+
+            createMandalas() {
+                this.layers.forEach((layer, idx) => {
+                    for (let i = 0; i < layer.mandalas; i++) {
+                        const div = document.createElement('div');
+                        div.className = 'mandala-lantern';
+
+                        const size = 200 + Math.random() * 400;
+                        const hue = 180 + idx * 20 + Math.random() * 30; // Ocean blues/teals
+
+                        const svg = this.createMandala(size, hue);
+                        div.appendChild(svg);
+
+                        div.style.left = `${Math.random() * 100}%`;
+                        div.style.top = `${Math.random() * 100}%`;
+                        div.style.animationDelay = `${Math.random() * 10}s`;
+                        div.style.animationDuration = `${15 + Math.random() * 10}s`;
+
+                        layer.el.appendChild(div);
+                    }
+                });
+            }
+
+            setupParallax() {
+                window.addEventListener('scroll', () => {
+                    const scrollY = window.scrollY;
+
+                    this.layers.forEach(layer => {
+                        const y = scrollY * layer.speed;
+                        layer.el.style.transform = `translateY(${-y}px)`;
+                    });
+                });
+
+                // Mouse reactivity
+                window.addEventListener('mousemove', (e) => {
+                    const x = (e.clientX / window.innerWidth - 0.5) * 20;
+                    const y = (e.clientY / window.innerHeight - 0.5) * 20;
+
+                    this.layers.forEach((layer, idx) => {
+                        const factor = (idx + 1) * 0.5;
+                        layer.el.style.transform += ` translate(${x * factor}px, ${y * factor}px)`;
+                    });
+                });
+            }
+        }
+
+        // ═══════════════════════════════════════════════════════════════════════
+        // GSAP SCROLL CHOREOGRAPHY
+        // ═══════════════════════════════════════════════════════════════════════
+        class ScrollChoreographer {
+            constructor(visualizer) {
+                this.visualizer = visualizer;
+                this.init();
+            }
+
+            init() {
+                this.setupScrollProgress();
+                this.setupHeroAnimation();
+                this.setupAboutAnimation();
+                this.setupProductsCarousel();
+                this.setupContactAnimation();
+                this.setupModeSwitching();
+            }
+
+            // Scroll progress bar
+            setupScrollProgress() {
+                gsap.to('#scrollProgress', {
+                    scaleX: 1,
+                    ease: 'none',
+                    scrollTrigger: {
+                        trigger: 'body',
+                        start: 'top top',
+                        end: 'bottom bottom',
+                        scrub: 0.3
+                    }
+                });
+            }
+
+            // Hero 800vh locked experience
+            setupHeroAnimation() {
+                const heroTl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: '#hero',
+                        start: 'top top',
+                        end: 'bottom top',
+                        scrub: 1,
+                        pin: '.section__viewport',
+                        onUpdate: (self) => {
+                            const p = self.progress;
+
+                            // Visualizer: Chaos to Structure
+                            if (this.visualizer) {
+                                this.visualizer.setParam('chaos', 1.0 - p * 0.8);
+                                this.visualizer.setParam('density', 25 + p * 15);
+                                this.visualizer.setParam('hue', 0.55 + p * 0.1);
+                            }
+                        }
+                    }
+                });
+
+                // Logo entrance
+                heroTl.to('#heroLogo', {
+                    opacity: 1,
+                    scale: 1,
+                    duration: 0.15,
+                    ease: 'power2.out'
+                }, 0);
+
+                // Tagline entrance
+                heroTl.to('#heroTagline', {
+                    opacity: 1,
+                    duration: 0.1,
+                    ease: 'power1.out'
+                }, 0.1);
+
+                // Statement reveal (fish school stagger)
+                heroTl.to('#heroStatement p', {
+                    opacity: 1,
+                    y: 0,
+                    stagger: 0.05,
+                    duration: 0.15,
+                    ease: 'power1.out'
+                }, 0.15);
+
+                // Pillars emerge (school formation)
+                heroTl.to('#heroPillars', {
+                    opacity: 1,
+                    duration: 0.1
+                }, 0.25);
+
+                heroTl.to('.pillar', {
+                    opacity: 1,
+                    y: 0,
+                    scale: 1,
+                    stagger: 0.03,
+                    duration: 0.1,
+                    ease: 'back.out(1.4)'
+                }, 0.28);
+
+                // Hold and fade
+                heroTl.to('#heroLogo, #heroTagline, #heroStatement, #heroPillars', {
+                    opacity: 0,
+                    y: -50,
+                    duration: 0.2,
+                    ease: 'power2.in'
+                }, 0.7);
+
+                // Initial states
+                gsap.set('#heroStatement p', { opacity: 0, y: 30 });
+                gsap.set('.pillar', { opacity: 0, y: 40, scale: 0.9 });
+            }
+
+            // About section scroll animations
+            setupAboutAnimation() {
+                // Text reveals
+                gsap.utils.toArray('#about .text-reveal').forEach(el => {
+                    gsap.from(el.querySelectorAll('h2, p'), {
+                        scrollTrigger: {
+                            trigger: el,
+                            start: 'top 80%',
+                            toggleActions: 'play none none reverse'
+                        },
+                        y: 60,
+                        opacity: 0,
+                        stagger: 0.15,
+                        duration: 0.8,
+                        ease: 'power2.out'
+                    });
+                });
+
+                // Visual card
+                gsap.from('.about__visual', {
+                    scrollTrigger: {
+                        trigger: '.about__visual',
+                        start: 'top 85%',
+                        toggleActions: 'play none none reverse'
+                    },
+                    x: 100,
+                    opacity: 0,
+                    duration: 1,
+                    ease: 'power2.out'
+                });
+            }
+
+            // Products carousel with GSAP
+            setupProductsCarousel() {
+                const track = document.getElementById('carouselTrack');
+                const cards = gsap.utils.toArray('.product-card');
+                const cardWidth = 350 + 32; // card + gap
+                let currentIndex = 0;
+
+                // Entrance animation
+                gsap.from(cards, {
+                    scrollTrigger: {
+                        trigger: '#products',
+                        start: 'top 70%',
+                        toggleActions: 'play none none reverse'
+                    },
+                    x: 100,
+                    opacity: 0,
+                    stagger: 0.1,
+                    duration: 0.6,
+                    ease: 'power2.out'
+                });
+
+                // Navigation
+                const goTo = (index) => {
+                    const maxIndex = cards.length - 3;
+                    currentIndex = Math.max(0, Math.min(index, maxIndex));
+
+                    gsap.to(track, {
+                        x: -currentIndex * cardWidth,
+                        duration: 0.6,
+                        ease: 'power2.out'
+                    });
+                };
+
+                document.getElementById('prevBtn').addEventListener('click', () => goTo(currentIndex - 1));
+                document.getElementById('nextBtn').addEventListener('click', () => goTo(currentIndex + 1));
+
+                // Auto-scroll on horizontal drag (touch-friendly)
+                let startX, scrollLeft;
+
+                track.addEventListener('mousedown', (e) => {
+                    startX = e.pageX - track.offsetLeft;
+                    scrollLeft = currentIndex * cardWidth;
+                });
+
+                track.addEventListener('mousemove', (e) => {
+                    if (!startX) return;
+                    e.preventDefault();
+                    const x = e.pageX - track.offsetLeft;
+                    const walk = (x - startX) * 2;
+                    const newX = scrollLeft - walk;
+                    const newIndex = Math.round(newX / cardWidth);
+                    goTo(newIndex);
+                });
+
+                track.addEventListener('mouseup', () => startX = null);
+                track.addEventListener('mouseleave', () => startX = null);
+            }
+
+            // Contact 800vh locked experience
+            setupContactAnimation() {
+                const contactTl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: '#contact',
+                        start: 'top top',
+                        end: 'bottom top',
+                        scrub: 1,
+                        pin: '.section__viewport',
+                        onUpdate: (self) => {
+                            const p = self.progress;
+
+                            // Visualizer deepens
+                            if (this.visualizer) {
+                                this.visualizer.setParam('hue', 0.65 - p * 0.1);
+                                this.visualizer.setParam('speed', 0.3 + p * 0.2);
+                            }
+                        }
+                    }
+                });
+
+                // Content entrance
+                gsap.set('.contact__content > *', { opacity: 0, y: 40 });
+
+                contactTl.to('.contact__content > *', {
+                    opacity: 1,
+                    y: 0,
+                    stagger: 0.05,
+                    duration: 0.2,
+                    ease: 'power2.out'
+                }, 0);
+
+                // Hold
+                contactTl.to({}, { duration: 0.5 });
+
+                // Subtle fade for footer reveal
+                contactTl.to('.contact__content', {
+                    opacity: 0.8,
+                    duration: 0.2
+                }, 0.8);
+            }
+
+            // Mode switching based on sections
+            setupModeSwitching() {
+                const sections = gsap.utils.toArray('[data-mode]');
+
+                sections.forEach(section => {
+                    ScrollTrigger.create({
+                        trigger: section,
+                        start: 'top 2%',
+                        end: 'bottom 2%',
+                        onEnter: () => this.setMode(section.dataset.mode),
+                        onEnterBack: () => this.setMode(section.dataset.mode)
+                    });
+                });
+            }
+
+            setMode(mode) {
+                document.body.classList.remove('mode-dark', 'mode-light');
+                document.body.classList.add(`mode-${mode}`);
+            }
+        }
+
+        // ═══════════════════════════════════════════════════════════════════════
+        // RIPPLE EFFECT FOR INTERACTIVE ELEMENTS
+        // ═══════════════════════════════════════════════════════════════════════
+        function createRipple(event) {
+            const element = event.currentTarget;
+            const ripple = document.createElement('span');
+            ripple.className = 'ripple';
+
+            const rect = element.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+
+            ripple.style.width = ripple.style.height = `${size}px`;
+            ripple.style.left = `${event.clientX - rect.left - size / 2}px`;
+            ripple.style.top = `${event.clientY - rect.top - size / 2}px`;
+
+            element.appendChild(ripple);
+
+            gsap.to(ripple, {
+                scale: 2,
+                opacity: 0,
+                duration: 0.6,
+                ease: 'power2.out',
+                onComplete: () => ripple.remove()
+            });
+        }
+
+        // Add ripple to interactive elements
+        document.querySelectorAll('.neoskeu-card, .btn-primary, .carousel-nav__btn').forEach(el => {
+            el.classList.add('ripple-container');
+            el.addEventListener('click', createRipple);
+        });
+
+        // ═══════════════════════════════════════════════════════════════════════
+        // INITIALIZATION
+        // ═══════════════════════════════════════════════════════════════════════
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize WebGL visualizer
+            const canvas = document.getElementById('ocean-canvas');
+            const visualizer = new OceanVisualizer(canvas);
+
+            // Initialize parallax mandalas
+            const parallax = new MandalaParallax();
+
+            // Initialize scroll choreography
+            const choreographer = new ScrollChoreographer(visualizer);
+
+            // Hide loader after initialization
+            setTimeout(() => {
+                document.getElementById('loader').classList.add('hidden');
+            }, 1500);
+
+            // Form handling
+            document.getElementById('contactForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                // Add your form submission logic here
+                alert('Thank you! We\'ll be in touch soon.');
+            });
+        });
+    </script>
+</body>
+</html>
