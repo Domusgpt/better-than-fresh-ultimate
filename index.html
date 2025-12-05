@@ -107,11 +107,11 @@
             will-change: transform, opacity;
         }
 
-        .parallax-layer--bg { opacity: 0.15; filter: blur(2px); }
-        .parallax-layer--shadow { opacity: 0.2; filter: blur(1px); }
-        .parallax-layer--content { opacity: 0.3; }
-        .parallax-layer--highlight { opacity: 0.18; mix-blend-mode: screen; }
-        .parallax-layer--accent { opacity: 0.1; mix-blend-mode: overlay; }
+        .parallax-layer--bg { opacity: 0.4; filter: blur(1px); }
+        .parallax-layer--shadow { opacity: 0.5; }
+        .parallax-layer--content { opacity: 0.6; }
+        .parallax-layer--highlight { opacity: 0.5; mix-blend-mode: screen; }
+        .parallax-layer--accent { opacity: 0.4; mix-blend-mode: overlay; }
 
         .mandala-lantern {
             position: absolute;
@@ -129,7 +129,7 @@
         }
 
         /* ═══════════════════════════════════════════════════════════════════════
-           WEBGL OCEAN CANVAS
+           WEBGL OCEAN CANVAS - DRAMATIC VISIBILITY
            ═══════════════════════════════════════════════════════════════════════ */
         #ocean-canvas {
             position: fixed;
@@ -137,8 +137,9 @@
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -1;
-            opacity: 0.6;
+            z-index: 1;
+            opacity: 1;
+            pointer-events: none;
         }
 
         /* ═══════════════════════════════════════════════════════════════════════
@@ -274,7 +275,7 @@
            ═══════════════════════════════════════════════════════════════════════ */
         .section {
             position: relative;
-            z-index: 1;
+            z-index: 10;
         }
 
         .section--locked {
@@ -308,7 +309,7 @@
             max-width: 1200px;
             padding: var(--space-md);
             position: relative;
-            z-index: 10;
+            z-index: 100;
         }
 
         .hero__logo {
@@ -1169,14 +1170,35 @@
                     void main() {
                         vec2 uv = gl_FragCoord.xy / uResolution.xy; float t = uTime * uSpeed;
                         float structure = 1.0 - uChaos;
+
+                        // Dramatic chaos pattern
                         float chaos = snoise(uv * uDensity + t) * uChaos + snoise(uv * uDensity * 2.0 - t * 0.5) * uChaos * 0.5;
-                        float school = fishSchool(uv, t) * structure * 0.6;
-                        float lotus = lotusPattern(uv, t) * structure * 0.4;
-                        float pattern = chaos * 0.3 + school + lotus;
-                        float hueShift = uHue + pattern * 0.1;
-                        vec3 color = hsv2rgb(vec3(hueShift, 0.6 + structure * 0.2, 0.15 + abs(pattern) * 0.25));
-                        color *= (1.0 - uv.y * 0.3) * (1.0 - length(uv - 0.5) * 0.5);
-                        gl_FragColor = vec4(color, 1.0);
+                        chaos += snoise(uv * uDensity * 0.5 + t * 0.3) * uChaos * 0.3;
+
+                        // Fish school emergence
+                        float school = fishSchool(uv, t) * structure * 0.8;
+
+                        // Lotus sacred geometry
+                        float lotus = lotusPattern(uv, t) * structure * 0.6;
+
+                        // Combined pattern
+                        float pattern = chaos * 0.5 + school + lotus;
+
+                        // Color with more saturation and brightness
+                        float hueShift = uHue + pattern * 0.15;
+                        float saturation = 0.5 + structure * 0.3;
+                        float brightness = 0.25 + abs(pattern) * 0.4 + structure * 0.15;
+
+                        vec3 color = hsv2rgb(vec3(hueShift, saturation, brightness));
+
+                        // Dramatic vignette
+                        float vignette = 1.0 - length(uv - 0.5) * 0.6;
+                        color *= vignette;
+
+                        // Depth gradient (darker at top = deeper water)
+                        color *= (0.7 + uv.y * 0.5);
+
+                        gl_FragColor = vec4(color, 0.85);
                     }
                 `;
                 const vs = this.compileShader(gl.VERTEX_SHADER, vsSource);
@@ -1230,11 +1252,11 @@
         class MandalaParallax {
             constructor() {
                 this.layers = [
-                    { el: document.getElementById('layer1'), speed: 0.1, mandalas: 3 },
-                    { el: document.getElementById('layer2'), speed: 0.2, mandalas: 4 },
-                    { el: document.getElementById('layer3'), speed: 0.35, mandalas: 5 },
-                    { el: document.getElementById('layer4'), speed: 0.5, mandalas: 3 },
-                    { el: document.getElementById('layer5'), speed: 0.7, mandalas: 4 }
+                    { el: document.getElementById('layer1'), speed: 0.15, mandalas: 5 },
+                    { el: document.getElementById('layer2'), speed: 0.3, mandalas: 6 },
+                    { el: document.getElementById('layer3'), speed: 0.5, mandalas: 7 },
+                    { el: document.getElementById('layer4'), speed: 0.7, mandalas: 5 },
+                    { el: document.getElementById('layer5'), speed: 0.9, mandalas: 6 }
                 ];
                 this.createMandalas();
                 this.setupParallax();
@@ -1257,26 +1279,26 @@
                     for (let i = 0; i < petals; i++) {
                         const angle = (i / petals) * Math.PI * 2;
                         const petal = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
-                        const rx = Math.max(2, radius * 0.25);
-                        const ry = Math.max(1, radius * 0.12);
-                        petal.setAttribute('cx', Math.cos(angle) * radius * 0.4);
-                        petal.setAttribute('cy', Math.sin(angle) * radius * 0.4);
+                        const rx = Math.max(3, radius * 0.3);
+                        const ry = Math.max(2, radius * 0.15);
+                        petal.setAttribute('cx', Math.cos(angle) * radius * 0.45);
+                        petal.setAttribute('cy', Math.sin(angle) * radius * 0.45);
                         petal.setAttribute('rx', rx);
                         petal.setAttribute('ry', ry);
                         petal.setAttribute('transform', `rotate(${(angle * 180 / Math.PI)})`);
                         petal.setAttribute('fill', 'none');
-                        petal.setAttribute('stroke', `hsla(${hue}, 60%, 60%, 0.4)`);
-                        petal.setAttribute('stroke-width', '0.5');
+                        petal.setAttribute('stroke', `hsla(${hue}, 70%, 65%, 0.7)`);
+                        petal.setAttribute('stroke-width', '1');
                         group.appendChild(petal);
                     }
 
                     const center = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
                     center.setAttribute('cx', 0);
                     center.setAttribute('cy', 0);
-                    center.setAttribute('r', Math.max(2, radius * 0.15));
-                    center.setAttribute('fill', 'none');
-                    center.setAttribute('stroke', `hsla(${hue}, 50%, 50%, 0.3)`);
-                    center.setAttribute('stroke-width', '0.3');
+                    center.setAttribute('r', Math.max(3, radius * 0.2));
+                    center.setAttribute('fill', `hsla(${hue}, 60%, 50%, 0.2)`);
+                    center.setAttribute('stroke', `hsla(${hue}, 70%, 60%, 0.6)`);
+                    center.setAttribute('stroke-width', '0.8');
                     group.appendChild(center);
                     svg.appendChild(group);
                 }
@@ -1288,10 +1310,10 @@
                     for (let i = 0; i < layer.mandalas; i++) {
                         const div = document.createElement('div');
                         div.className = 'mandala-lantern';
-                        const size = 150 + Math.random() * 300;
-                        const hue = 180 + idx * 15 + Math.random() * 20;
+                        const size = 200 + Math.random() * 400; // Larger mandalas
+                        const hue = 175 + idx * 20 + Math.random() * 30; // More color variation
                         div.appendChild(this.createMandala(size, hue));
-                        div.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;width:${size}px;height:${size}px;animation-delay:${Math.random()*10}s;animation-duration:${15+Math.random()*10}s;`;
+                        div.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*150}%;width:${size}px;height:${size}px;animation-delay:${Math.random()*10}s;animation-duration:${12+Math.random()*8}s;`;
                         layer.el.appendChild(div);
                     }
                 });
@@ -1302,23 +1324,25 @@
                 const update = () => {
                     this.layers.forEach((layer, idx) => {
                         const y = scrollY * layer.speed;
-                        const mx = mouseX * (idx + 1) * 0.3;
-                        const my = mouseY * (idx + 1) * 0.3;
-                        layer.el.style.transform = `translate3d(${mx}px, ${-y + my}px, 0)`;
+                        const mx = mouseX * (idx + 1) * 0.8; // More mouse reactivity
+                        const my = mouseY * (idx + 1) * 0.8;
+                        // Add rotation for more dynamism
+                        const rotation = scrollY * 0.01 * (idx + 1) * 0.3;
+                        layer.el.style.transform = `translate3d(${mx}px, ${-y + my}px, 0) rotate(${rotation}deg)`;
                     });
                     requestAnimationFrame(update);
                 };
                 update();
                 window.addEventListener('scroll', () => { scrollY = window.scrollY; });
                 window.addEventListener('mousemove', (e) => {
-                    mouseX = (e.clientX / window.innerWidth - 0.5) * 20;
-                    mouseY = (e.clientY / window.innerHeight - 0.5) * 20;
+                    mouseX = (e.clientX / window.innerWidth - 0.5) * 40; // More mouse range
+                    mouseY = (e.clientY / window.innerHeight - 0.5) * 40;
                 });
             }
         }
 
         // ═══════════════════════════════════════════════════════════════════════
-        // GSAP SCROLL CHOREOGRAPHY - FIXED
+        // GSAP SCROLL CHOREOGRAPHY - DRAMATIC PINNED EXPERIENCES
         // ═══════════════════════════════════════════════════════════════════════
         class ScrollChoreographer {
             constructor(visualizer) {
@@ -1327,11 +1351,12 @@
             }
 
             init() {
+                gsap.registerPlugin(ScrollTrigger);
                 this.setupScrollProgress();
-                this.setupHeroAnimation();
+                this.setupHeroPinnedExperience();
                 this.setupAboutAnimation();
                 this.setupProductsCarousel();
-                this.setupContactAnimation();
+                this.setupContactPinnedExperience();
             }
 
             setupScrollProgress() {
@@ -1341,51 +1366,109 @@
                 });
             }
 
-            setupHeroAnimation() {
-                // Set initial visible state - content shows immediately
+            setupHeroPinnedExperience() {
+                // Initial states
                 gsap.set('#heroContent', { opacity: 1, y: 0 });
                 gsap.set('#heroLogo', { opacity: 1, scale: 1 });
-                gsap.set('#heroTagline', { opacity: 1 });
-                gsap.set('#heroStatement', { opacity: 1 });
-                gsap.set('#heroStatement p', { opacity: 1, y: 0 });
-                gsap.set('#heroPillars', { opacity: 1 });
-                gsap.set('.pillar', { opacity: 1, y: 0, scale: 1 });
+                gsap.set('#heroTagline', { opacity: 0, y: 30 });
+                gsap.set('#heroStatement', { opacity: 0 });
+                gsap.set('#heroStatement p', { opacity: 0, y: 40 });
+                gsap.set('#heroPillars', { opacity: 0 });
+                gsap.set('.pillar', { opacity: 0, y: 60, scale: 0.8 });
 
-                // Scroll-based fade out
+                // Create pinned timeline for 800vh hero
                 const heroTl = gsap.timeline({
                     scrollTrigger: {
                         trigger: '#hero',
                         start: 'top top',
                         end: 'bottom top',
                         scrub: 1,
+                        pin: '.section__viewport',
+                        pinSpacing: false,
                         onUpdate: (self) => {
                             const p = self.progress;
                             if (this.visualizer) {
-                                this.visualizer.setParam('chaos', 1.0 - p * 0.8);
-                                this.visualizer.setParam('density', 25 + p * 15);
-                                this.visualizer.setParam('hue', 0.55 + p * 0.1);
+                                // Chaos to structure transformation
+                                this.visualizer.setParam('chaos', 1.0 - p * 0.9);
+                                this.visualizer.setParam('density', 20 + p * 25);
+                                this.visualizer.setParam('hue', 0.55 + p * 0.15);
+                                this.visualizer.setParam('speed', 0.5 - p * 0.3);
                             }
                         }
                     }
                 });
 
-                // Fade out hero content as user scrolls
+                // STAGE 1 (0-15%): Logo pulses, chaos is maximum
+                heroTl.to('#heroLogo', {
+                    scale: 1.1,
+                    duration: 0.15,
+                    ease: 'power2.inOut'
+                }, 0);
+
+                // STAGE 2 (15-30%): Tagline reveals
+                heroTl.to('#heroTagline', {
+                    opacity: 1, y: 0,
+                    duration: 0.15,
+                    ease: 'power2.out'
+                }, 0.15);
+
+                // STAGE 3 (30-50%): Statement paragraphs emerge like fish school
+                heroTl.to('#heroStatement', { opacity: 1, duration: 0.1 }, 0.3);
+                heroTl.to('#heroStatement p', {
+                    opacity: 1, y: 0,
+                    stagger: 0.05,
+                    duration: 0.15,
+                    ease: 'power2.out'
+                }, 0.32);
+
+                // STAGE 4 (50-70%): Pillars emerge in formation
+                heroTl.to('#heroPillars', { opacity: 1, duration: 0.05 }, 0.5);
+                heroTl.to('.pillar', {
+                    opacity: 1, y: 0, scale: 1,
+                    stagger: 0.03,
+                    duration: 0.15,
+                    ease: 'back.out(1.2)'
+                }, 0.52);
+
+                // STAGE 5 (70-85%): Everything holds, structure is complete
+                // (natural pause in animation)
+
+                // STAGE 6 (85-100%): Content fades and lifts as we exit hero
                 heroTl.to('#heroContent', {
                     opacity: 0,
-                    y: -100,
-                    duration: 1,
+                    y: -150,
+                    scale: 0.95,
+                    duration: 0.15,
                     ease: 'power2.in'
-                }, 0.5);
+                }, 0.85);
             }
 
             setupAboutAnimation() {
+                // Staggered reveal of about content
                 gsap.from('#about .about__content > *', {
-                    scrollTrigger: { trigger: '#about', start: 'top 75%', toggleActions: 'play none none reverse' },
-                    y: 60, opacity: 0, stagger: 0.15, duration: 0.8, ease: 'power2.out'
+                    scrollTrigger: {
+                        trigger: '#about',
+                        start: 'top 70%',
+                        toggleActions: 'play none none reverse'
+                    },
+                    y: 80,
+                    opacity: 0,
+                    stagger: 0.2,
+                    duration: 1,
+                    ease: 'power3.out'
                 });
+
+                // Visual slides in from right
                 gsap.from('.about__visual', {
-                    scrollTrigger: { trigger: '.about__visual', start: 'top 80%', toggleActions: 'play none none reverse' },
-                    x: 100, opacity: 0, duration: 1, ease: 'power2.out'
+                    scrollTrigger: {
+                        trigger: '.about__visual',
+                        start: 'top 75%',
+                        toggleActions: 'play none none reverse'
+                    },
+                    x: 150,
+                    opacity: 0,
+                    duration: 1.2,
+                    ease: 'power3.out'
                 });
             }
 
@@ -1395,18 +1478,22 @@
                 const cardWidth = 350 + 32;
                 let currentIndex = 0;
 
-                // Ensure cards are visible by default
-                gsap.set(cards, { opacity: 1, x: 0 });
+                // Initially hidden
+                gsap.set(cards, { opacity: 0, y: 80, scale: 0.9 });
 
-                // Animate cards on scroll into view
+                // Dramatic staggered reveal
                 ScrollTrigger.create({
                     trigger: '#products',
-                    start: 'top 80%',
+                    start: 'top 65%',
                     onEnter: () => {
-                        gsap.fromTo(cards,
-                            { opacity: 0, x: 60 },
-                            { opacity: 1, x: 0, stagger: 0.1, duration: 0.6, ease: 'power2.out' }
-                        );
+                        gsap.to(cards, {
+                            opacity: 1,
+                            y: 0,
+                            scale: 1,
+                            stagger: 0.12,
+                            duration: 0.8,
+                            ease: 'back.out(1.4)'
+                        });
                     },
                     once: true
                 });
@@ -1420,18 +1507,50 @@
                 document.getElementById('nextBtn').addEventListener('click', () => goTo(currentIndex + 1));
             }
 
-            setupContactAnimation() {
-                gsap.set('#contactContent > *', { opacity: 0, y: 40 });
+            setupContactPinnedExperience() {
+                // Initial states for contact section
+                gsap.set('#contactContent', { opacity: 0 });
+                gsap.set('#contactContent > *', { opacity: 0, y: 60 });
 
-                ScrollTrigger.create({
-                    trigger: '#contact',
-                    start: 'top 60%',
-                    onEnter: () => {
-                        gsap.to('#contactContent > *', {
-                            opacity: 1, y: 0, stagger: 0.1, duration: 0.6, ease: 'power2.out'
-                        });
+                // Create pinned experience for contact (800vh section)
+                const contactTl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: '#contact',
+                        start: 'top top',
+                        end: 'bottom top',
+                        scrub: 1,
+                        pin: '#contact .section__viewport',
+                        pinSpacing: false,
+                        onUpdate: (self) => {
+                            const p = self.progress;
+                            // Mode switch to slightly lighter at end
+                            if (p > 0.8) {
+                                document.body.classList.add('mode-light');
+                            } else {
+                                document.body.classList.remove('mode-light');
+                            }
+                        }
                     }
                 });
+
+                // STAGE 1 (0-20%): Container fades in
+                contactTl.to('#contactContent', {
+                    opacity: 1,
+                    duration: 0.2,
+                    ease: 'power2.out'
+                }, 0);
+
+                // STAGE 2 (20-60%): Form elements emerge one by one
+                contactTl.to('#contactContent > *', {
+                    opacity: 1,
+                    y: 0,
+                    stagger: 0.08,
+                    duration: 0.4,
+                    ease: 'power3.out'
+                }, 0.2);
+
+                // STAGE 3 (60-100%): Hold and allow interaction
+                // (natural pause for user to interact with form)
             }
         }
 
