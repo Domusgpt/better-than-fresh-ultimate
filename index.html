@@ -1343,6 +1343,7 @@
 
             setupHeroAnimation() {
                 // Set initial visible state - content shows immediately
+                gsap.set('#heroContent', { opacity: 1, y: 0 });
                 gsap.set('#heroLogo', { opacity: 1, scale: 1 });
                 gsap.set('#heroTagline', { opacity: 1 });
                 gsap.set('#heroStatement', { opacity: 1 });
@@ -1394,9 +1395,20 @@
                 const cardWidth = 350 + 32;
                 let currentIndex = 0;
 
-                gsap.from(cards, {
-                    scrollTrigger: { trigger: '#products', start: 'top 70%', toggleActions: 'play none none reverse' },
-                    x: 100, opacity: 0, stagger: 0.1, duration: 0.6, ease: 'power2.out'
+                // Ensure cards are visible by default
+                gsap.set(cards, { opacity: 1, x: 0 });
+
+                // Animate cards on scroll into view
+                ScrollTrigger.create({
+                    trigger: '#products',
+                    start: 'top 80%',
+                    onEnter: () => {
+                        gsap.fromTo(cards,
+                            { opacity: 0, x: 60 },
+                            { opacity: 1, x: 0, stagger: 0.1, duration: 0.6, ease: 'power2.out' }
+                        );
+                    },
+                    once: true
                 });
 
                 const goTo = (index) => {
