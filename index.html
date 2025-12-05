@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-    <!-- GSAP + ScrollTrigger + SplitText -->
+    <!-- GSAP + ScrollTrigger -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
@@ -107,40 +107,14 @@
             will-change: transform, opacity;
         }
 
-        /* Layer 1: Deep Background - Slow moving mandalas */
-        .parallax-layer--bg {
-            opacity: 0.12;
-            filter: blur(2px);
-        }
+        .parallax-layer--bg { opacity: 0.15; filter: blur(2px); }
+        .parallax-layer--shadow { opacity: 0.2; filter: blur(1px); }
+        .parallax-layer--content { opacity: 0.3; }
+        .parallax-layer--highlight { opacity: 0.18; mix-blend-mode: screen; }
+        .parallax-layer--accent { opacity: 0.1; mix-blend-mode: overlay; }
 
-        /* Layer 2: Shadow depth */
-        .parallax-layer--shadow {
-            opacity: 0.18;
-            filter: blur(1px);
-        }
-
-        /* Layer 3: Content layer */
-        .parallax-layer--content {
-            opacity: 0.25;
-        }
-
-        /* Layer 4: Highlight layer */
-        .parallax-layer--highlight {
-            opacity: 0.15;
-            mix-blend-mode: screen;
-        }
-
-        /* Layer 5: Accent particles */
-        .parallax-layer--accent {
-            opacity: 0.08;
-            mix-blend-mode: overlay;
-        }
-
-        /* Mandala Lantern SVG Pattern */
         .mandala-lantern {
             position: absolute;
-            width: 400px;
-            height: 400px;
             animation: mandala-float 20s ease-in-out infinite;
         }
 
@@ -155,7 +129,7 @@
         }
 
         /* ═══════════════════════════════════════════════════════════════════════
-           WEBGL OCEAN CANVAS - Chaos to Structure Visualizer
+           WEBGL OCEAN CANVAS
            ═══════════════════════════════════════════════════════════════════════ */
         #ocean-canvas {
             position: fixed;
@@ -207,25 +181,16 @@
                 0 0 60px rgba(79, 195, 247, 0.1);
         }
 
-        /* Pressed state for interactivity */
-        .neoskeu-card--pressed {
-            box-shadow:
-                inset 6px 6px 12px var(--neoskeu-shadow-dark),
-                inset -6px -6px 12px var(--neoskeu-shadow-light);
-        }
-
-        /* Light mode neoskeuomorphic */
         body.mode-light .neoskeu-card {
             background: linear-gradient(145deg, #ffffff, #e6e6e6);
             box-shadow:
                 12px 12px 24px #d1d1d1,
-                -12px -12px 24px #ffffff,
-                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+                -12px -12px 24px #ffffff;
             border-color: rgba(10, 37, 64, 0.08);
         }
 
         /* ═══════════════════════════════════════════════════════════════════════
-           TYPOGRAPHY - Oceanic Emergence Style
+           TYPOGRAPHY
            ═══════════════════════════════════════════════════════════════════════ */
         .display-xl {
             font-family: var(--font-display);
@@ -258,13 +223,6 @@
             line-height: 1.8;
         }
 
-        .body-md {
-            font-family: var(--font-body);
-            font-size: 1rem;
-            font-weight: 400;
-            line-height: 1.7;
-        }
-
         .label {
             font-family: var(--font-body);
             font-size: 0.75rem;
@@ -273,15 +231,42 @@
             text-transform: uppercase;
         }
 
-        /* Text reveal animation containers */
-        .text-reveal {
-            overflow: hidden;
+        /* ═══════════════════════════════════════════════════════════════════════
+           SVG ICON SYSTEM
+           ═══════════════════════════════════════════════════════════════════════ */
+        .icon {
+            display: inline-block;
+            width: 1em;
+            height: 1em;
+            fill: currentColor;
+            vertical-align: middle;
         }
 
-        .text-reveal .line {
-            display: block;
-            transform: translateY(100%);
-            opacity: 0;
+        .icon-lg { width: 3rem; height: 3rem; }
+        .icon-xl { width: 5rem; height: 5rem; }
+        .icon-xxl { width: 8rem; height: 8rem; }
+
+        .pillar__icon .icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            color: var(--aqua-bright);
+        }
+
+        .product-icon {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .product-icon svg {
+            width: 120px;
+            height: 120px;
+            opacity: 0.9;
+            filter: drop-shadow(0 4px 20px rgba(79, 195, 247, 0.3));
         }
 
         /* ═══════════════════════════════════════════════════════════════════════
@@ -292,7 +277,6 @@
             z-index: 1;
         }
 
-        /* 800vh Locked Experience Sections */
         .section--locked {
             height: 800vh;
             position: relative;
@@ -309,18 +293,15 @@
             overflow: hidden;
         }
 
-        /* Standard scrolling sections */
         .section--scroll {
             min-height: 100vh;
             padding: var(--space-xl) var(--space-md);
         }
 
         /* ═══════════════════════════════════════════════════════════════════════
-           HERO SECTION - 800vh Chaos to Structure Experience
+           HERO SECTION
            ═══════════════════════════════════════════════════════════════════════ */
-        #hero {
-            background: transparent;
-        }
+        #hero { background: transparent; }
 
         .hero__content {
             text-align: center;
@@ -336,8 +317,6 @@
             font-weight: 300;
             color: var(--aqua-bright);
             margin-bottom: var(--space-sm);
-            opacity: 0;
-            transform: scale(0.8);
         }
 
         .hero__logo .fish-symbol {
@@ -358,7 +337,6 @@
             letter-spacing: 0.2em;
             text-transform: uppercase;
             color: var(--aqua-soft);
-            opacity: 0;
             margin-bottom: var(--space-lg);
         }
 
@@ -373,13 +351,10 @@
             gap: var(--space-md);
             max-width: 1000px;
             margin: 0 auto;
-            opacity: 0;
         }
 
         @media (max-width: 768px) {
-            .hero__pillars {
-                grid-template-columns: repeat(2, 1fr);
-            }
+            .hero__pillars { grid-template-columns: repeat(2, 1fr); }
         }
 
         .pillar {
@@ -388,9 +363,8 @@
         }
 
         .pillar__icon {
-            font-size: 2.5rem;
             margin-bottom: var(--space-sm);
-            opacity: 0.8;
+            opacity: 0.9;
         }
 
         .pillar__title {
@@ -407,7 +381,7 @@
         }
 
         /* ═══════════════════════════════════════════════════════════════════════
-           ABOUT SECTION - Fisheries Story
+           ABOUT SECTION
            ═══════════════════════════════════════════════════════════════════════ */
         #about {
             background: linear-gradient(180deg,
@@ -427,9 +401,7 @@
         }
 
         @media (max-width: 968px) {
-            .about__grid {
-                grid-template-columns: 1fr;
-            }
+            .about__grid { grid-template-columns: 1fr; }
         }
 
         .about__visual {
@@ -442,17 +414,21 @@
         .about__image-placeholder {
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg,
-                var(--ocean-light) 0%,
-                var(--ocean-deep) 100%);
+            background: linear-gradient(135deg, var(--ocean-light) 0%, var(--ocean-deep) 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 4rem;
+            position: relative;
+        }
+
+        .about__image-placeholder svg {
+            width: 200px;
+            height: 200px;
+            opacity: 0.6;
         }
 
         /* ═══════════════════════════════════════════════════════════════════════
-           PRODUCTS CAROUSEL - GSAP Scroll Choreographed
+           PRODUCTS CAROUSEL
            ═══════════════════════════════════════════════════════════════════════ */
         #products {
             padding: var(--space-xl) 0;
@@ -494,14 +470,11 @@
 
         .product-card__image {
             flex: 1;
-            background: linear-gradient(135deg,
-                var(--ocean-mid) 0%,
-                var(--ocean-deep) 100%);
+            background: linear-gradient(135deg, var(--ocean-mid) 0%, var(--ocean-deep) 100%);
             border-radius: 16px 16px 0 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 5rem;
             position: relative;
             overflow: hidden;
         }
@@ -514,6 +487,7 @@
             right: 0;
             height: 50%;
             background: linear-gradient(to top, var(--ocean-deep), transparent);
+            pointer-events: none;
         }
 
         .product-card__info {
@@ -551,7 +525,6 @@
             color: var(--aqua-soft);
         }
 
-        /* Carousel Navigation */
         .carousel-nav {
             display: flex;
             justify-content: center;
@@ -581,12 +554,10 @@
         }
 
         /* ═══════════════════════════════════════════════════════════════════════
-           CONTACT SECTION - 800vh Locked Footer Experience
+           CONTACT SECTION
            ═══════════════════════════════════════════════════════════════════════ */
         #contact {
-            background: linear-gradient(180deg,
-                transparent 0%,
-                var(--ocean-abyss) 30%);
+            background: linear-gradient(180deg, transparent 0%, var(--ocean-abyss) 30%);
         }
 
         .contact__content {
@@ -600,10 +571,6 @@
             display: grid;
             gap: var(--space-md);
             margin-top: var(--space-lg);
-        }
-
-        .form-group {
-            position: relative;
         }
 
         .form-input {
@@ -630,14 +597,8 @@
                 0 0 20px rgba(79, 195, 247, 0.2);
         }
 
-        .form-input::placeholder {
-            color: rgba(245, 243, 239, 0.4);
-        }
-
-        textarea.form-input {
-            min-height: 150px;
-            resize: vertical;
-        }
+        .form-input::placeholder { color: rgba(245, 243, 239, 0.4); }
+        textarea.form-input { min-height: 150px; resize: vertical; }
 
         .btn-primary {
             padding: var(--space-md) var(--space-lg);
@@ -650,16 +611,12 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s var(--ease-out-expo);
-            box-shadow:
-                0 4px 15px rgba(79, 195, 247, 0.3),
-                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 15px rgba(79, 195, 247, 0.3);
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow:
-                0 8px 25px rgba(79, 195, 247, 0.4),
-                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+            box-shadow: 0 8px 25px rgba(79, 195, 247, 0.4);
         }
 
         /* ═══════════════════════════════════════════════════════════════════════
@@ -705,7 +662,7 @@
         }
 
         /* ═══════════════════════════════════════════════════════════════════════
-           SCROLL PROGRESS INDICATOR
+           SCROLL PROGRESS & EFFECTS
            ═══════════════════════════════════════════════════════════════════════ */
         .scroll-progress {
             position: fixed;
@@ -718,13 +675,7 @@
             z-index: 9999;
         }
 
-        /* ═══════════════════════════════════════════════════════════════════════
-           REACTIVE HOVER RIPPLE EFFECT
-           ═══════════════════════════════════════════════════════════════════════ */
-        .ripple-container {
-            position: relative;
-            overflow: hidden;
-        }
+        .ripple-container { position: relative; overflow: hidden; }
 
         .ripple {
             position: absolute;
@@ -735,7 +686,7 @@
         }
 
         /* ═══════════════════════════════════════════════════════════════════════
-           LOADING SCREEN - Chaos State
+           LOADING SCREEN
            ═══════════════════════════════════════════════════════════════════════ */
         .loader {
             position: fixed;
@@ -751,17 +702,13 @@
             transition: opacity 0.8s var(--ease-out-expo), visibility 0.8s;
         }
 
-        .loader.hidden {
-            opacity: 0;
-            visibility: hidden;
-        }
+        .loader.hidden { opacity: 0; visibility: hidden; }
 
-        .loader__content {
-            text-align: center;
-        }
+        .loader__content { text-align: center; }
 
         .loader__fish {
             font-size: 4rem;
+            color: var(--aqua-bright);
             animation: loader-swim 2s ease-in-out infinite;
         }
 
@@ -779,34 +726,91 @@
         }
 
         /* ═══════════════════════════════════════════════════════════════════════
-           RESPONSIVE ADJUSTMENTS
+           RESPONSIVE
            ═══════════════════════════════════════════════════════════════════════ */
         @media (max-width: 768px) {
             :root {
                 --space-lg: 2rem;
                 --space-xl: 4rem;
             }
-
-            .section--locked {
-                height: 500vh;
-            }
-
-            .product-card {
-                flex: 0 0 280px;
-            }
+            .section--locked { height: 500vh; }
+            .product-card { flex: 0 0 280px; height: 450px; }
         }
 
-        /* Reduced motion preference */
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after {
                 animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
                 transition-duration: 0.01ms !important;
             }
         }
     </style>
 </head>
 <body>
+    <!-- SVG Icon Definitions -->
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+        <!-- Wave/Tradition Icon -->
+        <symbol id="icon-wave" viewBox="0 0 64 64">
+            <path fill="currentColor" d="M8 32c4-8 12-8 16 0s12 8 16 0 12-8 16 0v8c-4 8-12 8-16 0s-12-8-16 0-12 8-16 0zM8 44c4-8 12-8 16 0s12 8 16 0 12-8 16 0v8c-4 8-12 8-16 0s-12-8-16 0-12 8-16 0z" opacity="0.6"/>
+            <path fill="currentColor" d="M8 20c4-8 12-8 16 0s12 8 16 0 12-8 16 0v8c-4 8-12 8-16 0s-12-8-16 0-12 8-16 0z"/>
+        </symbol>
+        <!-- Brain/Intelligence Icon -->
+        <symbol id="icon-brain" viewBox="0 0 64 64">
+            <path fill="currentColor" d="M32 8c-12 0-20 8-20 20 0 8 4 14 10 18v10h20V46c6-4 10-10 10-18 0-12-8-20-20-20zm-6 32c-2 0-4-2-4-4s2-4 4-4 4 2 4 4-2 4-4 4zm12 0c-2 0-4-2-4-4s2-4 4-4 4 2 4 4-2 4-4 4zm-6-12c-4 0-8-4-8-8h4c0 2 2 4 4 4s4-2 4-4h4c0 4-4 8-8 8z"/>
+        </symbol>
+        <!-- Checkmark/Integrity Icon -->
+        <symbol id="icon-check" viewBox="0 0 64 64">
+            <circle cx="32" cy="32" r="28" fill="none" stroke="currentColor" stroke-width="4"/>
+            <path fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" d="M18 32l10 10 18-20"/>
+        </symbol>
+        <!-- Hammer/Craft Icon -->
+        <symbol id="icon-craft" viewBox="0 0 64 64">
+            <path fill="currentColor" d="M52 12L40 24l-8-8 12-12c4-4 12 4 8 8zM36 28L16 48l-4 12 12-4 20-20zM12 56l4-4-4-4-4 4z"/>
+        </symbol>
+        <!-- Fish Icon -->
+        <symbol id="icon-fish" viewBox="0 0 64 64">
+            <path fill="currentColor" d="M56 32c0 0-8-16-24-16-4 0-8 1-12 3l-8-7v14l-8 6 8 6v14l8-7c4 2 8 3 12 3 16 0 24-16 24-16zm-20 4c-2 0-4-2-4-4s2-4 4-4 4 2 4 4-2 4-4 4z"/>
+        </symbol>
+        <!-- Shrimp Icon -->
+        <symbol id="icon-shrimp" viewBox="0 0 64 64">
+            <path fill="currentColor" d="M48 16c-8-8-24-4-28 8-2 6 0 12 4 16l-16 16h12l8-8c4 2 8 0 12-4 8-8 16-20 8-28zm-12 20c-2 0-4-2-4-4s2-4 4-4 4 2 4 4-2 4-4 4z"/>
+            <path fill="currentColor" opacity="0.6" d="M16 12l4 4M12 20l4 4M20 8l4 4"/>
+        </symbol>
+        <!-- Crab Icon -->
+        <symbol id="icon-crab" viewBox="0 0 64 64">
+            <ellipse cx="32" cy="40" rx="16" ry="12" fill="currentColor"/>
+            <circle cx="24" cy="28" r="4" fill="currentColor"/>
+            <circle cx="40" cy="28" r="4" fill="currentColor"/>
+            <path fill="currentColor" d="M8 32c0-8 8-12 12-8l-4 8c-4 4-8 4-8 0zM56 32c0-8-8-12-12-8l4 8c4 4 8 4 8 0z"/>
+        </symbol>
+        <!-- Squid Icon -->
+        <symbol id="icon-squid" viewBox="0 0 64 64">
+            <ellipse cx="32" cy="24" rx="12" ry="16" fill="currentColor"/>
+            <path fill="currentColor" opacity="0.8" d="M24 40c-2 12-4 16-4 16s4-2 6-8M28 40c0 14 0 18 0 18s2-4 2-10M32 40c2 12 4 16 4 16s-4-2-6-8M36 40c0 14 0 18 0 18s-2-4-2-10M40 40c2 12 4 16 4 16s-4-2-6-8"/>
+            <circle cx="28" cy="20" r="3" fill="var(--ocean-abyss)"/>
+            <circle cx="36" cy="20" r="3" fill="var(--ocean-abyss)"/>
+        </symbol>
+        <!-- Octopus Icon -->
+        <symbol id="icon-octopus" viewBox="0 0 64 64">
+            <ellipse cx="32" cy="20" rx="16" ry="12" fill="currentColor"/>
+            <path fill="currentColor" d="M16 28c-4 16-8 24-4 24s8-12 8-20M24 30c-2 18-2 26 2 26s4-14 2-24M32 32c0 18 0 26 0 26s4-14 4-24M40 30c2 18 2 26-2 26s-4-14-2-24M48 28c4 16 8 24 4 24s-8-12-8-20"/>
+            <circle cx="26" cy="18" r="3" fill="var(--ocean-abyss)"/>
+            <circle cx="38" cy="18" r="3" fill="var(--ocean-abyss)"/>
+        </symbol>
+        <!-- Lobster Icon -->
+        <symbol id="icon-lobster" viewBox="0 0 64 64">
+            <ellipse cx="32" cy="32" rx="8" ry="16" fill="currentColor"/>
+            <path fill="currentColor" d="M24 20c-8-8-16-4-16 4s8 8 12 4M40 20c8-8 16-4 16 4s-8 8-12 4"/>
+            <path fill="currentColor" opacity="0.7" d="M28 48l-4 8M32 48l0 10M36 48l4 8"/>
+            <circle cx="28" cy="28" r="2" fill="var(--ocean-abyss)"/>
+            <circle cx="36" cy="28" r="2" fill="var(--ocean-abyss)"/>
+        </symbol>
+        <!-- Anchor Icon -->
+        <symbol id="icon-anchor" viewBox="0 0 64 64">
+            <circle cx="32" cy="12" r="6" fill="none" stroke="currentColor" stroke-width="3"/>
+            <path fill="none" stroke="currentColor" stroke-width="3" d="M32 18v38M16 48c0 8 8 12 16 12s16-4 16-12M8 36h12M44 36h12"/>
+        </symbol>
+    </svg>
+
     <!-- Loading Screen -->
     <div class="loader" id="loader">
         <div class="loader__content">
@@ -830,19 +834,17 @@
     <!-- WebGL Ocean Canvas -->
     <canvas id="ocean-canvas"></canvas>
 
-    <!-- ═══════════════════════════════════════════════════════════════════════
-         HERO SECTION - 800vh Locked Experience
-         ═══════════════════════════════════════════════════════════════════════ -->
+    <!-- HERO SECTION -->
     <section id="hero" class="section section--locked" data-mode="dark">
         <div class="section__viewport">
-            <div class="hero__content">
+            <div class="hero__content" id="heroContent">
                 <div class="hero__logo" id="heroLogo">
                     <span class="fish-symbol">>fresh</span>:)
                 </div>
                 <div class="hero__tagline" id="heroTagline">
                     Better Than Fresh
                 </div>
-                <div class="hero__statement text-reveal" id="heroStatement">
+                <div class="hero__statement" id="heroStatement">
                     <p class="display-md">Premium seafood from Panama & Central America.</p>
                     <p class="body-lg" style="margin-top: var(--space-sm); opacity: 0.8;">
                         Proving that "fresh" isn't about proximity—it's about expertise, intelligence, and care.
@@ -850,22 +852,30 @@
                 </div>
                 <div class="hero__pillars" id="heroPillars">
                     <div class="pillar neoskeu-card">
-                        <div class="pillar__icon">🌊</div>
+                        <div class="pillar__icon">
+                            <svg class="icon"><use href="#icon-wave"/></svg>
+                        </div>
                         <div class="pillar__title">Tradition</div>
                         <div class="pillar__desc">Centuries of fishing wisdom</div>
                     </div>
                     <div class="pillar neoskeu-card">
-                        <div class="pillar__icon">🧠</div>
+                        <div class="pillar__icon">
+                            <svg class="icon"><use href="#icon-brain"/></svg>
+                        </div>
                         <div class="pillar__title">Intelligence</div>
                         <div class="pillar__desc">Science-driven quality</div>
                     </div>
                     <div class="pillar neoskeu-card">
-                        <div class="pillar__icon">✓</div>
+                        <div class="pillar__icon">
+                            <svg class="icon"><use href="#icon-check"/></svg>
+                        </div>
                         <div class="pillar__title">Integrity</div>
                         <div class="pillar__desc">Full transparency</div>
                     </div>
                     <div class="pillar neoskeu-card">
-                        <div class="pillar__icon">🔨</div>
+                        <div class="pillar__icon">
+                            <svg class="icon"><use href="#icon-craft"/></svg>
+                        </div>
                         <div class="pillar__title">Craft</div>
                         <div class="pillar__desc">Expert precision</div>
                     </div>
@@ -874,17 +884,15 @@
         </div>
     </section>
 
-    <!-- ═══════════════════════════════════════════════════════════════════════
-         ABOUT SECTION - Fisheries Scrolling Story
-         ═══════════════════════════════════════════════════════════════════════ -->
+    <!-- ABOUT SECTION -->
     <section id="about" class="section section--scroll" data-mode="dark">
         <div class="about__grid">
             <div class="about__content">
                 <span class="label" style="color: var(--aqua-bright);">Our Story</span>
-                <h2 class="display-lg text-reveal" style="margin: var(--space-sm) 0 var(--space-md);">
+                <h2 class="display-lg" style="margin: var(--space-sm) 0 var(--space-md);">
                     From Central American Waters to Your Table
                 </h2>
-                <div class="body-lg text-reveal">
+                <div class="body-lg">
                     <p style="margin-bottom: var(--space-md);">
                         We work directly with fishing communities in Panama and across Central America,
                         where generations of fishermen have perfected their craft on waters rich with
@@ -904,22 +912,20 @@
             </div>
             <div class="about__visual neoskeu-card">
                 <div class="about__image-placeholder">
-                    🐟
+                    <svg class="icon" style="color: var(--aqua-soft);"><use href="#icon-anchor"/></svg>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- ═══════════════════════════════════════════════════════════════════════
-         PRODUCTS SECTION - Carousel with GSAP Choreography
-         ═══════════════════════════════════════════════════════════════════════ -->
+    <!-- PRODUCTS SECTION -->
     <section id="products" class="section section--scroll" data-mode="dark">
         <div class="products__header">
             <span class="label" style="color: var(--aqua-bright);">Our Catch</span>
-            <h2 class="display-lg text-reveal" style="margin: var(--space-sm) 0;">
+            <h2 class="display-lg" style="margin: var(--space-sm) 0;">
                 Premium Selection
             </h2>
-            <p class="body-lg text-reveal" style="opacity: 0.8;">
+            <p class="body-lg" style="opacity: 0.8;">
                 Each product represents the pinnacle of sustainable seafood—expertly
                 sourced, intelligently processed, delivered with integrity.
             </p>
@@ -927,10 +933,13 @@
 
         <div class="carousel-container">
             <div class="carousel-track" id="carouselTrack">
-                <!-- Product Cards -->
                 <div class="product-card neoskeu-card">
                     <div class="product-card__inner">
-                        <div class="product-card__image">🦐</div>
+                        <div class="product-card__image">
+                            <div class="product-icon">
+                                <svg style="color: var(--aqua-soft);"><use href="#icon-shrimp"/></svg>
+                            </div>
+                        </div>
                         <div class="product-card__info">
                             <h3 class="product-card__name">Panama White Shrimp</h3>
                             <p class="product-card__origin">Gulf of Chiriquí, Panama</p>
@@ -944,7 +953,11 @@
 
                 <div class="product-card neoskeu-card">
                     <div class="product-card__inner">
-                        <div class="product-card__image">🐟</div>
+                        <div class="product-card__image">
+                            <div class="product-icon">
+                                <svg style="color: var(--aqua-soft);"><use href="#icon-fish"/></svg>
+                            </div>
+                        </div>
                         <div class="product-card__info">
                             <h3 class="product-card__name">Corvina Sea Bass</h3>
                             <p class="product-card__origin">Pacific Coast, Panama</p>
@@ -958,7 +971,11 @@
 
                 <div class="product-card neoskeu-card">
                     <div class="product-card__inner">
-                        <div class="product-card__image">🦀</div>
+                        <div class="product-card__image">
+                            <div class="product-icon">
+                                <svg style="color: var(--aqua-soft);"><use href="#icon-crab"/></svg>
+                            </div>
+                        </div>
                         <div class="product-card__info">
                             <h3 class="product-card__name">Blue Crab</h3>
                             <p class="product-card__origin">Caribbean Coast</p>
@@ -972,7 +989,11 @@
 
                 <div class="product-card neoskeu-card">
                     <div class="product-card__inner">
-                        <div class="product-card__image">🦑</div>
+                        <div class="product-card__image">
+                            <div class="product-icon">
+                                <svg style="color: var(--aqua-soft);"><use href="#icon-squid"/></svg>
+                            </div>
+                        </div>
                         <div class="product-card__info">
                             <h3 class="product-card__name">Pacific Squid</h3>
                             <p class="product-card__origin">Deep Waters, Costa Rica</p>
@@ -986,7 +1007,11 @@
 
                 <div class="product-card neoskeu-card">
                     <div class="product-card__inner">
-                        <div class="product-card__image">🐙</div>
+                        <div class="product-card__image">
+                            <div class="product-icon">
+                                <svg style="color: var(--aqua-soft);"><use href="#icon-octopus"/></svg>
+                            </div>
+                        </div>
                         <div class="product-card__info">
                             <h3 class="product-card__name">Octopus</h3>
                             <p class="product-card__origin">Gulf of Panama</p>
@@ -1000,7 +1025,11 @@
 
                 <div class="product-card neoskeu-card">
                     <div class="product-card__inner">
-                        <div class="product-card__image">🦞</div>
+                        <div class="product-card__image">
+                            <div class="product-icon">
+                                <svg style="color: var(--aqua-soft);"><use href="#icon-lobster"/></svg>
+                            </div>
+                        </div>
                         <div class="product-card__info">
                             <h3 class="product-card__name">Spiny Lobster</h3>
                             <p class="product-card__origin">Caribbean Reefs</p>
@@ -1020,17 +1049,15 @@
         </div>
     </section>
 
-    <!-- ═══════════════════════════════════════════════════════════════════════
-         CONTACT SECTION - 800vh Locked Footer Experience
-         ═══════════════════════════════════════════════════════════════════════ -->
+    <!-- CONTACT SECTION -->
     <section id="contact" class="section section--locked" data-mode="dark">
         <div class="section__viewport">
-            <div class="contact__content">
+            <div class="contact__content" id="contactContent">
                 <span class="label" style="color: var(--aqua-bright);">Get In Touch</span>
-                <h2 class="display-lg text-reveal" style="margin: var(--space-sm) 0;">
+                <h2 class="display-lg" style="margin: var(--space-sm) 0;">
                     Let's Connect
                 </h2>
-                <p class="body-lg text-reveal" style="opacity: 0.8; margin-bottom: var(--space-lg);">
+                <p class="body-lg" style="opacity: 0.8; margin-bottom: var(--space-lg);">
                     Interested in premium Central American seafood for your restaurant,
                     market, or distribution network? We'd love to hear from you.
                 </p>
@@ -1071,202 +1098,95 @@
         </p>
     </footer>
 
-    <!-- ═══════════════════════════════════════════════════════════════════════
-         JAVASCRIPT - GSAP Choreography + WebGL Ocean + Parallax System
-         ═══════════════════════════════════════════════════════════════════════ -->
     <script>
-        // Register GSAP plugins
         gsap.registerPlugin(ScrollTrigger);
 
         // ═══════════════════════════════════════════════════════════════════════
-        // WEBGL OCEAN VISUALIZER - Chaos to Structure Algorithm
+        // WEBGL OCEAN VISUALIZER
         // ═══════════════════════════════════════════════════════════════════════
         class OceanVisualizer {
             constructor(canvas) {
                 this.canvas = canvas;
                 this.gl = canvas.getContext('webgl2') || canvas.getContext('webgl');
-                if (!this.gl) {
-                    console.warn('WebGL not supported');
-                    return;
-                }
+                if (!this.gl) { console.warn('WebGL not supported'); return; }
 
-                this.params = {
-                    chaos: 1.0,        // 1.0 = full chaos, 0.0 = structured
-                    hue: 0.55,         // Ocean blue-green
-                    density: 25,
-                    speed: 0.5,
-                    scrollProgress: 0
-                };
-
+                this.params = { chaos: 1.0, hue: 0.55, density: 25, speed: 0.5 };
                 this.time = 0;
                 this.resize();
                 this.init();
                 this.animate();
-
                 window.addEventListener('resize', () => this.resize());
             }
 
             resize() {
                 this.canvas.width = window.innerWidth;
                 this.canvas.height = window.innerHeight;
-                if (this.gl) {
-                    this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
-                }
+                if (this.gl) this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
             }
 
             init() {
                 const gl = this.gl;
-
-                // Vertex shader
-                const vsSource = `
-                    attribute vec4 aPosition;
-                    void main() {
-                        gl_Position = aPosition;
-                    }
-                `;
-
-                // Fragment shader - Oceanic Emergence algorithm
+                const vsSource = `attribute vec4 aPosition; void main() { gl_Position = aPosition; }`;
                 const fsSource = `
                     precision highp float;
-                    uniform vec2 uResolution;
-                    uniform float uTime;
-                    uniform float uChaos;
-                    uniform float uHue;
-                    uniform float uDensity;
-                    uniform float uSpeed;
-
-                    // Simplex-like noise
+                    uniform vec2 uResolution; uniform float uTime, uChaos, uHue, uDensity, uSpeed;
                     vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
                     vec2 mod289(vec2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
                     vec3 permute(vec3 x) { return mod289(((x*34.0)+1.0)*x); }
-
                     float snoise(vec2 v) {
-                        const vec4 C = vec4(0.211324865405187, 0.366025403784439,
-                                           -0.577350269189626, 0.024390243902439);
-                        vec2 i  = floor(v + dot(v, C.yy));
-                        vec2 x0 = v - i + dot(i, C.xx);
+                        const vec4 C = vec4(0.211324865405187, 0.366025403784439, -0.577350269189626, 0.024390243902439);
+                        vec2 i = floor(v + dot(v, C.yy)); vec2 x0 = v - i + dot(i, C.xx);
                         vec2 i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
-                        vec4 x12 = x0.xyxy + C.xxzz;
-                        x12.xy -= i1;
-                        i = mod289(i);
+                        vec4 x12 = x0.xyxy + C.xxzz; x12.xy -= i1; i = mod289(i);
                         vec3 p = permute(permute(i.y + vec3(0.0, i1.y, 1.0)) + i.x + vec3(0.0, i1.x, 1.0));
                         vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy), dot(x12.zw,x12.zw)), 0.0);
-                        m = m*m;
-                        m = m*m;
-                        vec3 x = 2.0 * fract(p * C.www) - 1.0;
-                        vec3 h = abs(x) - 0.5;
-                        vec3 ox = floor(x + 0.5);
-                        vec3 a0 = x - ox;
+                        m = m*m; m = m*m;
+                        vec3 x = 2.0 * fract(p * C.www) - 1.0; vec3 h = abs(x) - 0.5;
+                        vec3 ox = floor(x + 0.5); vec3 a0 = x - ox;
                         m *= 1.79284291400159 - 0.85373472095314 * (a0*a0 + h*h);
-                        vec3 g;
-                        g.x = a0.x * x0.x + h.x * x0.y;
-                        g.yz = a0.yz * x12.xz + h.yz * x12.yw;
+                        vec3 g; g.x = a0.x * x0.x + h.x * x0.y; g.yz = a0.yz * x12.xz + h.yz * x12.yw;
                         return 130.0 * dot(m, g);
                     }
-
-                    // HSV to RGB
                     vec3 hsv2rgb(vec3 c) {
                         vec4 K = vec4(1.0, 2.0/3.0, 1.0/3.0, 3.0);
                         vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
                         return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
                     }
-
-                    // Fish school flocking pattern
                     float fishSchool(vec2 uv, float t) {
                         float pattern = 0.0;
                         for (float i = 0.0; i < 5.0; i++) {
-                            vec2 offset = vec2(
-                                sin(t * 0.3 + i * 1.5) * 0.3,
-                                cos(t * 0.2 + i * 1.2) * 0.2
-                            );
-                            float school = snoise((uv + offset) * (3.0 + i * 0.5) + t * 0.1);
-                            pattern += school * (1.0 / (i + 1.0));
+                            vec2 offset = vec2(sin(t * 0.3 + i * 1.5) * 0.3, cos(t * 0.2 + i * 1.2) * 0.2);
+                            pattern += snoise((uv + offset) * (3.0 + i * 0.5) + t * 0.1) * (1.0 / (i + 1.0));
                         }
                         return pattern;
                     }
-
-                    // Lotus/mandala radial pattern
                     float lotusPattern(vec2 uv, float t) {
-                        vec2 centered = uv - 0.5;
-                        float angle = atan(centered.y, centered.x);
-                        float radius = length(centered);
-
-                        float petals = 8.0;
-                        float lotus = sin(angle * petals + t * 0.2) * 0.5 + 0.5;
-                        lotus *= smoothstep(0.5, 0.1, radius);
-                        lotus *= smoothstep(0.0, 0.1, radius);
-
+                        vec2 centered = uv - 0.5; float angle = atan(centered.y, centered.x); float radius = length(centered);
+                        float lotus = sin(angle * 8.0 + t * 0.2) * 0.5 + 0.5;
+                        lotus *= smoothstep(0.5, 0.1, radius) * smoothstep(0.0, 0.1, radius);
                         return lotus;
                     }
-
                     void main() {
-                        vec2 uv = gl_FragCoord.xy / uResolution.xy;
-                        float t = uTime * uSpeed;
-
-                        // Chaos to structure interpolation
+                        vec2 uv = gl_FragCoord.xy / uResolution.xy; float t = uTime * uSpeed;
                         float structure = 1.0 - uChaos;
-
-                        // Layer 1: Turbulent chaos (diminishes with scroll)
-                        float chaos = snoise(uv * uDensity + t) * uChaos;
-                        chaos += snoise(uv * uDensity * 2.0 - t * 0.5) * uChaos * 0.5;
-
-                        // Layer 2: Fish school emergence
+                        float chaos = snoise(uv * uDensity + t) * uChaos + snoise(uv * uDensity * 2.0 - t * 0.5) * uChaos * 0.5;
                         float school = fishSchool(uv, t) * structure * 0.6;
-
-                        // Layer 3: Lotus mandala structure
                         float lotus = lotusPattern(uv, t) * structure * 0.4;
-
-                        // Combine layers
                         float pattern = chaos * 0.3 + school + lotus;
-
-                        // Color based on depth (scroll progress affects hue)
                         float hueShift = uHue + pattern * 0.1;
-                        float saturation = 0.6 + structure * 0.2;
-                        float brightness = 0.15 + abs(pattern) * 0.25;
-
-                        vec3 color = hsv2rgb(vec3(hueShift, saturation, brightness));
-
-                        // Add depth gradient
-                        color *= 1.0 - uv.y * 0.3;
-
-                        // Subtle vignette
-                        float vignette = 1.0 - length(uv - 0.5) * 0.5;
-                        color *= vignette;
-
+                        vec3 color = hsv2rgb(vec3(hueShift, 0.6 + structure * 0.2, 0.15 + abs(pattern) * 0.25));
+                        color *= (1.0 - uv.y * 0.3) * (1.0 - length(uv - 0.5) * 0.5);
                         gl_FragColor = vec4(color, 1.0);
                     }
                 `;
-
-                // Compile shaders
-                const vertexShader = this.compileShader(gl.VERTEX_SHADER, vsSource);
-                const fragmentShader = this.compileShader(gl.FRAGMENT_SHADER, fsSource);
-
-                // Create program
+                const vs = this.compileShader(gl.VERTEX_SHADER, vsSource);
+                const fs = this.compileShader(gl.FRAGMENT_SHADER, fsSource);
                 this.program = gl.createProgram();
-                gl.attachShader(this.program, vertexShader);
-                gl.attachShader(this.program, fragmentShader);
-                gl.linkProgram(this.program);
-
-                if (!gl.getProgramParameter(this.program, gl.LINK_STATUS)) {
-                    console.error('Shader program failed:', gl.getProgramInfoLog(this.program));
-                    return;
-                }
-
-                // Set up geometry (fullscreen quad)
-                const positions = new Float32Array([
-                    -1, -1,  1, -1,  -1, 1,
-                    -1,  1,  1, -1,   1, 1
-                ]);
-
-                const buffer = gl.createBuffer();
-                gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-                gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
-
-                const aPosition = gl.getAttribLocation(this.program, 'aPosition');
-                gl.enableVertexAttribArray(aPosition);
-                gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);
-
-                // Get uniform locations
+                gl.attachShader(this.program, vs); gl.attachShader(this.program, fs); gl.linkProgram(this.program);
+                if (!gl.getProgramParameter(this.program, gl.LINK_STATUS)) { console.error('Shader link failed'); return; }
+                const positions = new Float32Array([-1,-1, 1,-1, -1,1, -1,1, 1,-1, 1,1]);
+                const buffer = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buffer); gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
+                const aPos = gl.getAttribLocation(this.program, 'aPosition'); gl.enableVertexAttribArray(aPos); gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
                 this.uniforms = {
                     resolution: gl.getUniformLocation(this.program, 'uResolution'),
                     time: gl.getUniformLocation(this.program, 'uTime'),
@@ -1279,27 +1199,19 @@
 
             compileShader(type, source) {
                 const shader = this.gl.createShader(type);
-                this.gl.shaderSource(shader, source);
-                this.gl.compileShader(shader);
-
+                this.gl.shaderSource(shader, source); this.gl.compileShader(shader);
                 if (!this.gl.getShaderParameter(shader, this.gl.COMPILE_STATUS)) {
-                    console.error('Shader compile error:', this.gl.getShaderInfoLog(shader));
-                    this.gl.deleteShader(shader);
-                    return null;
+                    console.error('Shader error:', this.gl.getShaderInfoLog(shader)); return null;
                 }
                 return shader;
             }
 
-            setParam(name, value) {
-                this.params[name] = value;
-            }
+            setParam(name, value) { this.params[name] = value; }
 
             animate() {
                 if (!this.gl || !this.program) return;
-
                 this.time += 0.016;
                 const gl = this.gl;
-
                 gl.useProgram(this.program);
                 gl.uniform2f(this.uniforms.resolution, this.canvas.width, this.canvas.height);
                 gl.uniform1f(this.uniforms.time, this.time);
@@ -1307,15 +1219,13 @@
                 gl.uniform1f(this.uniforms.hue, this.params.hue);
                 gl.uniform1f(this.uniforms.density, this.params.density);
                 gl.uniform1f(this.uniforms.speed, this.params.speed);
-
                 gl.drawArrays(gl.TRIANGLES, 0, 6);
-
                 requestAnimationFrame(() => this.animate());
             }
         }
 
         // ═══════════════════════════════════════════════════════════════════════
-        // PARALLAX MANDALA SYSTEM
+        // PARALLAX MANDALA SYSTEM - FIXED
         // ═══════════════════════════════════════════════════════════════════════
         class MandalaParallax {
             constructor() {
@@ -1324,9 +1234,8 @@
                     { el: document.getElementById('layer2'), speed: 0.2, mandalas: 4 },
                     { el: document.getElementById('layer3'), speed: 0.35, mandalas: 5 },
                     { el: document.getElementById('layer4'), speed: 0.5, mandalas: 3 },
-                    { el: document.getElementById('layer5'), speed: 0.7, mandalas: 6 }
+                    { el: document.getElementById('layer5'), speed: 0.7, mandalas: 4 }
                 ];
-
                 this.createMandalas();
                 this.setupParallax();
             }
@@ -1337,41 +1246,40 @@
                 svg.setAttribute('width', size);
                 svg.setAttribute('height', size);
 
-                const petals = 8 + Math.floor(Math.random() * 8);
-                const layers = 3 + Math.floor(Math.random() * 3);
+                const petals = 6 + Math.floor(Math.random() * 6);
+                const layers = 2 + Math.floor(Math.random() * 2); // Max 3 layers to avoid negative radius
 
                 for (let l = 0; l < layers; l++) {
-                    const radius = 45 - l * 12;
+                    const radius = Math.max(10, 40 - l * 12); // Ensure radius never goes negative
                     const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
                     group.setAttribute('transform', 'translate(50, 50)');
 
                     for (let i = 0; i < petals; i++) {
                         const angle = (i / petals) * Math.PI * 2;
                         const petal = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
-                        petal.setAttribute('cx', Math.cos(angle) * radius * 0.5);
-                        petal.setAttribute('cy', Math.sin(angle) * radius * 0.5);
-                        petal.setAttribute('rx', radius * 0.3);
-                        petal.setAttribute('ry', radius * 0.15);
+                        const rx = Math.max(2, radius * 0.25);
+                        const ry = Math.max(1, radius * 0.12);
+                        petal.setAttribute('cx', Math.cos(angle) * radius * 0.4);
+                        petal.setAttribute('cy', Math.sin(angle) * radius * 0.4);
+                        petal.setAttribute('rx', rx);
+                        petal.setAttribute('ry', ry);
                         petal.setAttribute('transform', `rotate(${(angle * 180 / Math.PI)})`);
                         petal.setAttribute('fill', 'none');
-                        petal.setAttribute('stroke', `hsla(${hue}, 60%, 60%, 0.3)`);
+                        petal.setAttribute('stroke', `hsla(${hue}, 60%, 60%, 0.4)`);
                         petal.setAttribute('stroke-width', '0.5');
                         group.appendChild(petal);
                     }
 
-                    // Center circle
                     const center = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
                     center.setAttribute('cx', 0);
                     center.setAttribute('cy', 0);
-                    center.setAttribute('r', radius * 0.2);
+                    center.setAttribute('r', Math.max(2, radius * 0.15));
                     center.setAttribute('fill', 'none');
-                    center.setAttribute('stroke', `hsla(${hue}, 50%, 50%, 0.2)`);
+                    center.setAttribute('stroke', `hsla(${hue}, 50%, 50%, 0.3)`);
                     center.setAttribute('stroke-width', '0.3');
                     group.appendChild(center);
-
                     svg.appendChild(group);
                 }
-
                 return svg;
             }
 
@@ -1380,48 +1288,37 @@
                     for (let i = 0; i < layer.mandalas; i++) {
                         const div = document.createElement('div');
                         div.className = 'mandala-lantern';
-
-                        const size = 200 + Math.random() * 400;
-                        const hue = 180 + idx * 20 + Math.random() * 30; // Ocean blues/teals
-
-                        const svg = this.createMandala(size, hue);
-                        div.appendChild(svg);
-
-                        div.style.left = `${Math.random() * 100}%`;
-                        div.style.top = `${Math.random() * 100}%`;
-                        div.style.animationDelay = `${Math.random() * 10}s`;
-                        div.style.animationDuration = `${15 + Math.random() * 10}s`;
-
+                        const size = 150 + Math.random() * 300;
+                        const hue = 180 + idx * 15 + Math.random() * 20;
+                        div.appendChild(this.createMandala(size, hue));
+                        div.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;width:${size}px;height:${size}px;animation-delay:${Math.random()*10}s;animation-duration:${15+Math.random()*10}s;`;
                         layer.el.appendChild(div);
                     }
                 });
             }
 
             setupParallax() {
-                window.addEventListener('scroll', () => {
-                    const scrollY = window.scrollY;
-
-                    this.layers.forEach(layer => {
-                        const y = scrollY * layer.speed;
-                        layer.el.style.transform = `translateY(${-y}px)`;
-                    });
-                });
-
-                // Mouse reactivity
-                window.addEventListener('mousemove', (e) => {
-                    const x = (e.clientX / window.innerWidth - 0.5) * 20;
-                    const y = (e.clientY / window.innerHeight - 0.5) * 20;
-
+                let scrollY = 0, mouseX = 0, mouseY = 0;
+                const update = () => {
                     this.layers.forEach((layer, idx) => {
-                        const factor = (idx + 1) * 0.5;
-                        layer.el.style.transform += ` translate(${x * factor}px, ${y * factor}px)`;
+                        const y = scrollY * layer.speed;
+                        const mx = mouseX * (idx + 1) * 0.3;
+                        const my = mouseY * (idx + 1) * 0.3;
+                        layer.el.style.transform = `translate3d(${mx}px, ${-y + my}px, 0)`;
                     });
+                    requestAnimationFrame(update);
+                };
+                update();
+                window.addEventListener('scroll', () => { scrollY = window.scrollY; });
+                window.addEventListener('mousemove', (e) => {
+                    mouseX = (e.clientX / window.innerWidth - 0.5) * 20;
+                    mouseY = (e.clientY / window.innerHeight - 0.5) * 20;
                 });
             }
         }
 
         // ═══════════════════════════════════════════════════════════════════════
-        // GSAP SCROLL CHOREOGRAPHY
+        // GSAP SCROLL CHOREOGRAPHY - FIXED
         // ═══════════════════════════════════════════════════════════════════════
         class ScrollChoreographer {
             constructor(visualizer) {
@@ -1435,36 +1332,33 @@
                 this.setupAboutAnimation();
                 this.setupProductsCarousel();
                 this.setupContactAnimation();
-                this.setupModeSwitching();
             }
 
-            // Scroll progress bar
             setupScrollProgress() {
                 gsap.to('#scrollProgress', {
-                    scaleX: 1,
-                    ease: 'none',
-                    scrollTrigger: {
-                        trigger: 'body',
-                        start: 'top top',
-                        end: 'bottom bottom',
-                        scrub: 0.3
-                    }
+                    scaleX: 1, ease: 'none',
+                    scrollTrigger: { trigger: 'body', start: 'top top', end: 'bottom bottom', scrub: 0.3 }
                 });
             }
 
-            // Hero 800vh locked experience
             setupHeroAnimation() {
+                // Set initial visible state - content shows immediately
+                gsap.set('#heroLogo', { opacity: 1, scale: 1 });
+                gsap.set('#heroTagline', { opacity: 1 });
+                gsap.set('#heroStatement', { opacity: 1 });
+                gsap.set('#heroStatement p', { opacity: 1, y: 0 });
+                gsap.set('#heroPillars', { opacity: 1 });
+                gsap.set('.pillar', { opacity: 1, y: 0, scale: 1 });
+
+                // Scroll-based fade out
                 const heroTl = gsap.timeline({
                     scrollTrigger: {
                         trigger: '#hero',
                         start: 'top top',
                         end: 'bottom top',
                         scrub: 1,
-                        pin: '.section__viewport',
                         onUpdate: (self) => {
                             const p = self.progress;
-
-                            // Visualizer: Chaos to Structure
                             if (this.visualizer) {
                                 this.visualizer.setParam('chaos', 1.0 - p * 0.8);
                                 this.visualizer.setParam('density', 25 + p * 15);
@@ -1474,266 +1368,93 @@
                     }
                 });
 
-                // Logo entrance
-                heroTl.to('#heroLogo', {
-                    opacity: 1,
-                    scale: 1,
-                    duration: 0.15,
-                    ease: 'power2.out'
-                }, 0);
-
-                // Tagline entrance
-                heroTl.to('#heroTagline', {
-                    opacity: 1,
-                    duration: 0.1,
-                    ease: 'power1.out'
-                }, 0.1);
-
-                // Statement reveal (fish school stagger)
-                heroTl.to('#heroStatement p', {
-                    opacity: 1,
-                    y: 0,
-                    stagger: 0.05,
-                    duration: 0.15,
-                    ease: 'power1.out'
-                }, 0.15);
-
-                // Pillars emerge (school formation)
-                heroTl.to('#heroPillars', {
-                    opacity: 1,
-                    duration: 0.1
-                }, 0.25);
-
-                heroTl.to('.pillar', {
-                    opacity: 1,
-                    y: 0,
-                    scale: 1,
-                    stagger: 0.03,
-                    duration: 0.1,
-                    ease: 'back.out(1.4)'
-                }, 0.28);
-
-                // Hold and fade
-                heroTl.to('#heroLogo, #heroTagline, #heroStatement, #heroPillars', {
+                // Fade out hero content as user scrolls
+                heroTl.to('#heroContent', {
                     opacity: 0,
-                    y: -50,
-                    duration: 0.2,
-                    ease: 'power2.in'
-                }, 0.7);
-
-                // Initial states
-                gsap.set('#heroStatement p', { opacity: 0, y: 30 });
-                gsap.set('.pillar', { opacity: 0, y: 40, scale: 0.9 });
-            }
-
-            // About section scroll animations
-            setupAboutAnimation() {
-                // Text reveals
-                gsap.utils.toArray('#about .text-reveal').forEach(el => {
-                    gsap.from(el.querySelectorAll('h2, p'), {
-                        scrollTrigger: {
-                            trigger: el,
-                            start: 'top 80%',
-                            toggleActions: 'play none none reverse'
-                        },
-                        y: 60,
-                        opacity: 0,
-                        stagger: 0.15,
-                        duration: 0.8,
-                        ease: 'power2.out'
-                    });
-                });
-
-                // Visual card
-                gsap.from('.about__visual', {
-                    scrollTrigger: {
-                        trigger: '.about__visual',
-                        start: 'top 85%',
-                        toggleActions: 'play none none reverse'
-                    },
-                    x: 100,
-                    opacity: 0,
+                    y: -100,
                     duration: 1,
-                    ease: 'power2.out'
+                    ease: 'power2.in'
+                }, 0.5);
+            }
+
+            setupAboutAnimation() {
+                gsap.from('#about .about__content > *', {
+                    scrollTrigger: { trigger: '#about', start: 'top 75%', toggleActions: 'play none none reverse' },
+                    y: 60, opacity: 0, stagger: 0.15, duration: 0.8, ease: 'power2.out'
+                });
+                gsap.from('.about__visual', {
+                    scrollTrigger: { trigger: '.about__visual', start: 'top 80%', toggleActions: 'play none none reverse' },
+                    x: 100, opacity: 0, duration: 1, ease: 'power2.out'
                 });
             }
 
-            // Products carousel with GSAP
             setupProductsCarousel() {
                 const track = document.getElementById('carouselTrack');
                 const cards = gsap.utils.toArray('.product-card');
-                const cardWidth = 350 + 32; // card + gap
+                const cardWidth = 350 + 32;
                 let currentIndex = 0;
 
-                // Entrance animation
                 gsap.from(cards, {
-                    scrollTrigger: {
-                        trigger: '#products',
-                        start: 'top 70%',
-                        toggleActions: 'play none none reverse'
-                    },
-                    x: 100,
-                    opacity: 0,
-                    stagger: 0.1,
-                    duration: 0.6,
-                    ease: 'power2.out'
+                    scrollTrigger: { trigger: '#products', start: 'top 70%', toggleActions: 'play none none reverse' },
+                    x: 100, opacity: 0, stagger: 0.1, duration: 0.6, ease: 'power2.out'
                 });
 
-                // Navigation
                 const goTo = (index) => {
-                    const maxIndex = cards.length - 3;
-                    currentIndex = Math.max(0, Math.min(index, maxIndex));
-
-                    gsap.to(track, {
-                        x: -currentIndex * cardWidth,
-                        duration: 0.6,
-                        ease: 'power2.out'
-                    });
+                    currentIndex = Math.max(0, Math.min(index, cards.length - 3));
+                    gsap.to(track, { x: -currentIndex * cardWidth, duration: 0.6, ease: 'power2.out' });
                 };
 
                 document.getElementById('prevBtn').addEventListener('click', () => goTo(currentIndex - 1));
                 document.getElementById('nextBtn').addEventListener('click', () => goTo(currentIndex + 1));
-
-                // Auto-scroll on horizontal drag (touch-friendly)
-                let startX, scrollLeft;
-
-                track.addEventListener('mousedown', (e) => {
-                    startX = e.pageX - track.offsetLeft;
-                    scrollLeft = currentIndex * cardWidth;
-                });
-
-                track.addEventListener('mousemove', (e) => {
-                    if (!startX) return;
-                    e.preventDefault();
-                    const x = e.pageX - track.offsetLeft;
-                    const walk = (x - startX) * 2;
-                    const newX = scrollLeft - walk;
-                    const newIndex = Math.round(newX / cardWidth);
-                    goTo(newIndex);
-                });
-
-                track.addEventListener('mouseup', () => startX = null);
-                track.addEventListener('mouseleave', () => startX = null);
             }
 
-            // Contact 800vh locked experience
             setupContactAnimation() {
-                const contactTl = gsap.timeline({
-                    scrollTrigger: {
-                        trigger: '#contact',
-                        start: 'top top',
-                        end: 'bottom top',
-                        scrub: 1,
-                        pin: '.section__viewport',
-                        onUpdate: (self) => {
-                            const p = self.progress;
+                gsap.set('#contactContent > *', { opacity: 0, y: 40 });
 
-                            // Visualizer deepens
-                            if (this.visualizer) {
-                                this.visualizer.setParam('hue', 0.65 - p * 0.1);
-                                this.visualizer.setParam('speed', 0.3 + p * 0.2);
-                            }
-                        }
+                ScrollTrigger.create({
+                    trigger: '#contact',
+                    start: 'top 60%',
+                    onEnter: () => {
+                        gsap.to('#contactContent > *', {
+                            opacity: 1, y: 0, stagger: 0.1, duration: 0.6, ease: 'power2.out'
+                        });
                     }
                 });
-
-                // Content entrance
-                gsap.set('.contact__content > *', { opacity: 0, y: 40 });
-
-                contactTl.to('.contact__content > *', {
-                    opacity: 1,
-                    y: 0,
-                    stagger: 0.05,
-                    duration: 0.2,
-                    ease: 'power2.out'
-                }, 0);
-
-                // Hold
-                contactTl.to({}, { duration: 0.5 });
-
-                // Subtle fade for footer reveal
-                contactTl.to('.contact__content', {
-                    opacity: 0.8,
-                    duration: 0.2
-                }, 0.8);
-            }
-
-            // Mode switching based on sections
-            setupModeSwitching() {
-                const sections = gsap.utils.toArray('[data-mode]');
-
-                sections.forEach(section => {
-                    ScrollTrigger.create({
-                        trigger: section,
-                        start: 'top 2%',
-                        end: 'bottom 2%',
-                        onEnter: () => this.setMode(section.dataset.mode),
-                        onEnterBack: () => this.setMode(section.dataset.mode)
-                    });
-                });
-            }
-
-            setMode(mode) {
-                document.body.classList.remove('mode-dark', 'mode-light');
-                document.body.classList.add(`mode-${mode}`);
             }
         }
 
         // ═══════════════════════════════════════════════════════════════════════
-        // RIPPLE EFFECT FOR INTERACTIVE ELEMENTS
+        // RIPPLE EFFECT
         // ═══════════════════════════════════════════════════════════════════════
         function createRipple(event) {
-            const element = event.currentTarget;
+            const el = event.currentTarget;
             const ripple = document.createElement('span');
             ripple.className = 'ripple';
-
-            const rect = element.getBoundingClientRect();
+            const rect = el.getBoundingClientRect();
             const size = Math.max(rect.width, rect.height);
-
-            ripple.style.width = ripple.style.height = `${size}px`;
-            ripple.style.left = `${event.clientX - rect.left - size / 2}px`;
-            ripple.style.top = `${event.clientY - rect.top - size / 2}px`;
-
-            element.appendChild(ripple);
-
-            gsap.to(ripple, {
-                scale: 2,
-                opacity: 0,
-                duration: 0.6,
-                ease: 'power2.out',
-                onComplete: () => ripple.remove()
-            });
+            ripple.style.cssText = `width:${size}px;height:${size}px;left:${event.clientX-rect.left-size/2}px;top:${event.clientY-rect.top-size/2}px;`;
+            el.appendChild(ripple);
+            gsap.to(ripple, { scale: 2, opacity: 0, duration: 0.6, ease: 'power2.out', onComplete: () => ripple.remove() });
         }
 
-        // Add ripple to interactive elements
         document.querySelectorAll('.neoskeu-card, .btn-primary, .carousel-nav__btn').forEach(el => {
             el.classList.add('ripple-container');
             el.addEventListener('click', createRipple);
         });
 
         // ═══════════════════════════════════════════════════════════════════════
-        // INITIALIZATION
+        // INIT
         // ═══════════════════════════════════════════════════════════════════════
         document.addEventListener('DOMContentLoaded', () => {
-            // Initialize WebGL visualizer
             const canvas = document.getElementById('ocean-canvas');
             const visualizer = new OceanVisualizer(canvas);
-
-            // Initialize parallax mandalas
             const parallax = new MandalaParallax();
-
-            // Initialize scroll choreography
             const choreographer = new ScrollChoreographer(visualizer);
 
-            // Hide loader after initialization
-            setTimeout(() => {
-                document.getElementById('loader').classList.add('hidden');
-            }, 1500);
+            setTimeout(() => document.getElementById('loader').classList.add('hidden'), 1200);
 
-            // Form handling
             document.getElementById('contactForm').addEventListener('submit', (e) => {
                 e.preventDefault();
-                // Add your form submission logic here
                 alert('Thank you! We\'ll be in touch soon.');
             });
         });
