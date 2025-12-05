@@ -1161,11 +1161,10 @@
                     }
 
                     // Geometric lotus petal shape
-                    float petalShape(vec2 p, float width, float length) {
+                    float petalShape(vec2 p, float petalWidth, float petalLen) {
                         float d = length(p);
-                        float angle = atan(p.y, p.x);
-                        float petal = smoothstep(length, length * 0.3, d);
-                        petal *= smoothstep(0.0, width, 0.5 - abs(p.y / max(d, 0.001)));
+                        float petal = smoothstep(petalLen, petalLen * 0.3, d);
+                        petal *= smoothstep(0.0, petalWidth, 0.5 - abs(p.y / max(d, 0.001)));
                         return petal;
                     }
 
