@@ -16,7 +16,7 @@
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
@@ -39,7 +39,7 @@
 
         .versions {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 2rem;
         }
 
@@ -63,21 +63,38 @@
                 0 0 40px rgba(79, 195, 247, 0.2);
         }
 
-        .preview {
-            width: 100%;
-            height: 250px;
-            object-fit: cover;
-            border-bottom: 1px solid rgba(79, 195, 247, 0.1);
+        .version-card.featured {
+            grid-column: span 2;
+            border: 2px solid rgba(155, 77, 202, 0.5);
+            box-shadow:
+                12px 12px 24px #060d14,
+                -12px -12px 24px #14293d,
+                0 0 30px rgba(155, 77, 202, 0.2);
+        }
+
+        @media (max-width: 800px) {
+            .version-card.featured {
+                grid-column: span 1;
+            }
         }
 
         .preview-placeholder {
             width: 100%;
-            height: 250px;
+            height: 200px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 4rem;
+            font-size: 3rem;
             background: linear-gradient(135deg, #1a3a52, #0d2035);
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .preview-label {
+            font-size: 1rem;
+            color: #80DEEA;
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
 
         .card-content {
@@ -122,11 +139,44 @@
             font-weight: 600;
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(79, 195, 247, 0.3);
+            margin-right: 0.5rem;
         }
 
         .btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(79, 195, 247, 0.5);
+        }
+
+        .btn.featured {
+            background: linear-gradient(135deg, #E8B4B8, #9B4DCA);
+            box-shadow: 0 4px 15px rgba(155, 77, 202, 0.4);
+        }
+
+        .btn.featured:hover {
+            box-shadow: 0 6px 20px rgba(155, 77, 202, 0.6);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid #4FC3F7;
+            color: #4FC3F7;
+            box-shadow: none;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(79, 195, 247, 0.1);
+            box-shadow: 0 4px 15px rgba(79, 195, 247, 0.2);
+        }
+
+        .branch-badge {
+            display: inline-block;
+            background: rgba(255, 193, 7, 0.2);
+            color: #FFC107;
+            padding: 0.2rem 0.6rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            margin-left: 0.5rem;
+            border: 1px solid rgba(255, 193, 7, 0.3);
         }
 
         .footer {
@@ -145,17 +195,46 @@
 </head>
 <body>
     <div class="container">
-        <h1>>fresh:) Versions</h1>
-        <p class="subtitle">Better Than Fresh - Visual Experience Gallery</p>
+        <h1>;)FRESH Versions</h1>
+        <p class="subtitle">Better Than Fresh - Visual Experience Gallery | All Branches Deployed</p>
 
         <div class="versions">
+            <!-- FEATURED: Fish Logo Nautical Version -->
+            <div class="version-card featured">
+                <div class="preview-placeholder" style="background: linear-gradient(135deg, #0a2540, #1a4a6a, #2a5a7a);">
+                    <span style="font-size: 4rem;">🐟</span>
+                    <span style="font-size: 2rem; font-family: Georgia, serif; color: #4FC3F7;">;)FRESH</span>
+                    <span class="preview-label">NEW - Swimming Fish Logo</span>
+                </div>
+                <div class="card-content">
+                    <h2 class="version-title">🐟 Fish Logo - Nautical Edition <span class="branch-badge">fish-logo-nautical-cards</span></h2>
+                    <p class="version-desc">
+                        <strong>LATEST VERSION:</strong> Animated fish logo with ";)FRESH" design where the semicolon
+                        forms the fish eye. Features swimming/gasping animations, morphing header behavior,
+                        concentric lotus parallax rings, and 3D tilt card effects with sacred geometry bursts on click.
+                    </p>
+                    <div class="features">
+                        <span class="feature-tag">🐟 Fish Logo SVG</span>
+                        <span class="feature-tag">🌊 Swim Animation</span>
+                        <span class="feature-tag">👁️ Gasp/Blink</span>
+                        <span class="feature-tag">📍 Header Morph</span>
+                        <span class="feature-tag">🪷 8-Ring Lotus Parallax</span>
+                        <span class="feature-tag">🎴 3D Tilt Cards</span>
+                        <span class="feature-tag">✨ Sacred Geometry Burst</span>
+                    </div>
+                    <a href="../branches/fish-logo-nautical-cards/" class="btn featured">View Fish Logo Version</a>
+                    <a href="https://github.com/Domusgpt/better-than-fresh-ultimate/tree/fish-logo-nautical-cards" class="btn btn-secondary" target="_blank">View Branch</a>
+                </div>
+            </div>
+
             <!-- Sacred Lotus Mandala Version -->
             <div class="version-card">
                 <div class="preview-placeholder" style="background: linear-gradient(135deg, #2a1a4a, #4a2a6a, #1a3a52);">
-                    🪷
+                    <span>🪷</span>
+                    <span class="preview-label">Sacred Geometry</span>
                 </div>
                 <div class="card-content">
-                    <h2 class="version-title">Sacred Lotus Mandala</h2>
+                    <h2 class="version-title">Sacred Lotus Mandala <span class="branch-badge">sacred-lotus-mandala</span></h2>
                     <p class="version-desc">
                         The ultimate chaos-to-structure experience. Watch as turbulent ocean chaos
                         transforms into a beautiful geometric lotus mandala with sacred geometry patterns,
@@ -168,17 +247,19 @@
                         <span class="feature-tag">24 Rays</span>
                         <span class="feature-tag">Golden Center</span>
                     </div>
-                    <a href="sacred-lotus-mandala/" class="btn">View Sacred Lotus</a>
+                    <a href="../branches/sacred-lotus-mandala/" class="btn">View Sacred Lotus</a>
+                    <a href="https://github.com/Domusgpt/better-than-fresh-ultimate/tree/sacred-lotus-mandala" class="btn btn-secondary" target="_blank">View Branch</a>
                 </div>
             </div>
 
             <!-- Original Chaos Noise Version -->
             <div class="version-card">
                 <div class="preview-placeholder" style="background: linear-gradient(135deg, #1a4a3a, #2a5a4a, #1a3a52);">
-                    🌊
+                    <span>🌊</span>
+                    <span class="preview-label">Original Version</span>
                 </div>
                 <div class="card-content">
-                    <h2 class="version-title">Original Chaos Noise</h2>
+                    <h2 class="version-title">Original Chaos Noise <span class="branch-badge">original-chaos-noise</span></h2>
                     <p class="version-desc">
                         The original oceanic chaos visualization. Features turbulent teal/green noise
                         patterns that transform into structured purple waves with fish school dynamics
@@ -191,7 +272,8 @@
                         <span class="feature-tag">Wave Patterns</span>
                         <span class="feature-tag">Organic Flow</span>
                     </div>
-                    <a href="original-chaos-noise/" class="btn">View Original</a>
+                    <a href="../branches/original-chaos-noise/" class="btn">View Original</a>
+                    <a href="https://github.com/Domusgpt/better-than-fresh-ultimate/tree/original-chaos-noise" class="btn btn-secondary" target="_blank">View Branch</a>
                 </div>
             </div>
         </div>

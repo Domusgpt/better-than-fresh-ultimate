@@ -1,0 +1,99 @@
+# Deploy multiple branches to GitHub Pages
+# Each branch gets its own subdirectory
+name: Deploy All Branches
+
+on:
+  push:
+    branches:
+      - main
+      - sacred-lotus-mandala
+      - original-chaos-noise
+      - fish-logo-nautical-cards
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: main
+
+      - name: Checkout sacred-lotus-mandala
+        uses: actions/checkout@v4
+        with:
+          ref: sacred-lotus-mandala
+          path: sacred-lotus-mandala
+        continue-on-error: true
+
+      - name: Checkout original-chaos-noise
+        uses: actions/checkout@v4
+        with:
+          ref: original-chaos-noise
+          path: original-chaos-noise
+        continue-on-error: true
+
+      - name: Checkout fish-logo-nautical-cards
+        uses: actions/checkout@v4
+        with:
+          ref: fish-logo-nautical-cards
+          path: fish-logo-nautical-cards
+        continue-on-error: true
+
+      - name: Prepare deployment structure
+        run: |
+          mkdir -p deploy
+
+          # Copy main branch content as root
+          cp -r main/* deploy/
+
+          # Create branch-specific directories
+          mkdir -p deploy/branches/sacred-lotus-mandala
+          mkdir -p deploy/branches/original-chaos-noise
+          mkdir -p deploy/branches/fish-logo-nautical-cards
+
+          # Copy each branch's content
+          if [ -d "sacred-lotus-mandala" ]; then
+            cp -r sacred-lotus-mandala/* deploy/branches/sacred-lotus-mandala/
+          fi
+
+          if [ -d "original-chaos-noise" ]; then
+            cp -r original-chaos-noise/* deploy/branches/original-chaos-noise/
+          fi
+
+          if [ -d "fish-logo-nautical-cards" ]; then
+            cp -r fish-logo-nautical-cards/* deploy/branches/fish-logo-nautical-cards/
+          fi
+
+          echo "Deployment structure:"
+          find deploy -type f -name "*.html" | head -20
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: deploy
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
