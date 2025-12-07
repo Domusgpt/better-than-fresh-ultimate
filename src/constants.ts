@@ -20,7 +20,7 @@ export const STORY_CARDS: StoryCard[] = [
     coordinates: 'FAO ZONE 77',
     description: 'AAA Saku Blocks and Loins. CO-Treated for vibrant color retention.',
     fullContent: 'Our crown jewel. Wild-caught Panamanian Yellowfin, processed into precision-cut Saku blocks and Center-Cut Loins. We utilize Tasteless Smoke (CO) treatment to ensure the myoglobin retains its ruby-red vibrancy during the frozen state. Ideal for poke, sushi, or searing. Consistency in size, color, and grading (AAA/AA) allows for precise food cost calculation and zero waste in the kitchen.',
-    image: 'https://images.unsplash.com/photo-1599084993091-1cb5c0721cc6?q=80&w=2070&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1534604973900-c43ab4c2e0ab?q=80&w=2574&auto=format&fit=crop',
   },
   {
     id: '03',
@@ -30,7 +30,7 @@ export const STORY_CARDS: StoryCard[] = [
     coordinates: 'STOCK: LIVE',
     description: 'Explore our full range. Swordfish, Mahi, Snapper, Grouper.',
     fullContent: 'Our supply chain extends beyond Tuna. We provide a full suite of premium frozen seafood, individually vacuum packed (IVP) for maximum shelf life and inventory flexibility. From the dense steak-texture of Swordfish to the delicate flake of Red Snapper, every item adheres to our rigid vertical integration standards.',
-    image: 'https://images.unsplash.com/photo-1517182486459-33c4c66584cb?q=80&w=2673&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1579631542720-3a87824fff86?q=80&w=2574&auto=format&fit=crop',
     productList: [
       {
         name: 'Swordfish Steaks',
@@ -82,6 +82,6 @@ export const STORY_CARDS: StoryCard[] = [
     coordinates: '09°00′N 79°30′W',
     description: 'We own the boats. We own the plants. Total traceability.',
     fullContent: 'In an industry rife with opacity, Pono Marketing x Fishmonger Inc offers total transparency. We do not aggregate from unknown artisanal fleets. We operate the longliners. We manage the HACCP-certified processing plants in Central America. We control the cold chain logistics. This allows us to guarantee species authenticity and ethical labor practices.',
-    image: 'https://images.unsplash.com/photo-1500462918059-b1a0cb512f1d?q=80&w=2574&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?q=80&w=2574&auto=format&fit=crop',
   }
 ];
