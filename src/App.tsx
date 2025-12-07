@@ -2,7 +2,9 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { GeometricBackground } from './components/GeometricBackground';
+import NauticalCartographyBackground from './components/NauticalCartographyBackground';
+import NauticalParticleField from './components/NauticalParticleField';
+import OceanCurrents from './components/OceanCurrents';
 import { IntroSequence } from './components/IntroSequence';
 import { ContentOverlay } from './components/ContentOverlay';
 import { STORY_CARDS } from './constants';
@@ -226,11 +228,19 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="relative min-h-screen font-sans text-parchment selection:bg-gold-500 selection:text-navy-950 perspective-[2000px] overflow-x-hidden bg-navy-950">
+    <div className="relative min-h-screen font-sans text-parchment selection:bg-gold-500 selection:text-navy-950 perspective-[2000px] overflow-x-hidden" style={{ backgroundColor: '#020c1b' }}>
       
-      <GeometricBackground
-        isExpanded={isExpanded}
+      {/* Layered Nautical Background System - Emergence from Pure Black */}
+      <NauticalCartographyBackground
+        scrollProgress={scrollProgress}
         sectionIndex={activeSectionIndex}
+      />
+      <OceanCurrents
+        intensity={0.8}
+        scrollProgress={scrollProgress}
+      />
+      <NauticalParticleField
+        density={70}
         scrollProgress={scrollProgress}
       />
       <DepthGauge />
