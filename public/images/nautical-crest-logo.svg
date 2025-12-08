@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Golden Laurel Wreath -->
+  <g fill="#d4af37" stroke="#c5a028" stroke-width="0.5">
+    <!-- Left Laurel Branch -->
+    <path d="M30 60 Q25 50 20 40 Q22 45 25 50 Q30 55 35 60 Q40 65 45 70 Q50 75 55 80 Q60 85 65 90 Q70 95 75 100 Q80 105 85 110 Q90 115 95 120 Q85 118 75 115 Q65 110 55 105 Q45 100 35 95 Q25 85 20 75 Q15 65 20 55 Q25 50 30 60 Z"/>
+    <!-- Left Leaves -->
+    <ellipse cx="25" cy="55" rx="3" ry="8" transform="rotate(-30 25 55)"/>
+    <ellipse cx="35" cy="70" rx="3" ry="8" transform="rotate(-20 35 70)"/>
+    <ellipse cx="45" cy="85" rx="3" ry="8" transform="rotate(-10 45 85)"/>
+    <ellipse cx="55" cy="100" rx="3" ry="8" transform="rotate(0 55 100)"/>
+    <ellipse cx="65" cy="115" rx="3" ry="8" transform="rotate(10 65 115)"/>
+    
+    <!-- Right Laurel Branch -->
+    <path d="M170 60 Q175 50 180 40 Q178 45 175 50 Q170 55 165 60 Q160 65 155 70 Q150 75 145 80 Q140 85 135 90 Q130 95 125 100 Q120 105 115 110 Q110 115 105 120 Q115 118 125 115 Q135 110 145 105 Q155 100 165 95 Q175 85 180 75 Q185 65 180 55 Q175 50 170 60 Z"/>
+    <!-- Right Leaves -->
+    <ellipse cx="175" cy="55" rx="3" ry="8" transform="rotate(30 175 55)"/>
+    <ellipse cx="165" cy="70" rx="3" ry="8" transform="rotate(20 165 70)"/>
+    <ellipse cx="155" cy="85" rx="3" ry="8" transform="rotate(10 155 85)"/>
+    <ellipse cx="145" cy="100" rx="3" ry="8" transform="rotate(0 145 100)"/>
+    <ellipse cx="135" cy="115" rx="3" ry="8" transform="rotate(-10 135 115)"/>
+  </g>
+
+  <!-- Top Star -->
+  <g fill="#d4af37" stroke="#c5a028" stroke-width="0.5">
+    <polygon points="100,25 103,33 112,33 105,39 108,47 100,42 92,47 95,39 88,33 97,33"/>
+  </g>
+
+  <!-- Bottom Stars -->
+  <g fill="#d4af37" stroke="#c5a028" stroke-width="0.5">
+    <polygon points="80,155 82,160 87,160 83,163 85,168 80,165 75,168 77,163 73,160 78,160"/>
+    <polygon points="120,155 122,160 127,160 123,163 125,168 120,165 115,168 117,163 113,160 118,160"/>
+  </g>
+
+  <!-- Central Hexagonal Shield -->
+  <g fill="#0a192f" stroke="#112240" stroke-width="2">
+    <polygon points="100,60 130,75 130,105 100,120 70,105 70,75"/>
+  </g>
+
+  <!-- Ship Inside Shield -->
+  <g fill="white" stroke="white" stroke-width="1">
+    <!-- Ship Hull -->
+    <path d="M75 100 Q85 105 100 105 Q115 105 125 100 Q125 95 120 95 L80 95 Q75 95 75 100"/>
+    
+    <!-- Ship Structure -->
+    <rect x="85" y="85" width="8" height="15" fill="white"/>
+    <rect x="107" y="85" width="8" height="15" fill="white"/>
+    
+    <!-- Sail -->
+    <path d="M105 85 Q115 80 120 75 Q115 70 105 75 Q100 80 105 85 Z"/>
+    
+    <!-- Mast -->
+    <line x1="110" y1="75" x2="110" y2="100" stroke="white" stroke-width="2"/>
+    
+    <!-- Ocean Waves -->
+    <path d="M70 110 Q80 108 90 110 Q100 112 110 110 Q120 108 130 110" stroke="white" stroke-width="2" fill="none"/>
+    <path d="M70 115 Q80 113 90 115 Q100 117 110 115 Q120 113 130 115" stroke="white" stroke-width="1.5" fill="none"/>
+  </g>
+</svg>
