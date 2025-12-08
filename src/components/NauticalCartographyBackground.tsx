@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 interface NauticalCartographyBackgroundProps {
   scrollProgress?: number;
@@ -15,6 +15,7 @@ const NauticalCartographyBackground: React.FC<NauticalCartographyBackgroundProps
   const animationFrameRef = useRef<number>();
   const startTimeRef = useRef<number>(Date.now());
   const mouseRef = useRef({ x: 0.5, y: 0.5 });
+  const [webglSupported, setWebglSupported] = useState(true);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -29,7 +30,8 @@ const NauticalCartographyBackground: React.FC<NauticalCartographyBackgroundProps
     });
 
     if (!gl) {
-      console.error('WebGL not supported');
+      console.warn('WebGL not supported, falling back to CSS animations');
+      setWebglSupported(false);
       return;
     }
 
@@ -440,12 +442,80 @@ const NauticalCartographyBackground: React.FC<NauticalCartographyBackgroundProps
     };
   }, [scrollProgress, sectionIndex]);
 
-  return (
+  // CSS Fallback Component
+  const CSSFallback = () => (
+    <div className="fixed top-0 left-0 w-full h-full -z-10" style={{ opacity: 0.85 }}>
+      {/* Animated gradient background */}
+      <div 
+        className="absolute inset-0 bg-gradient-to-br from-blue-900/30 via-slate-800/20 to-emerald-900/30"
+        style={{
+          background: `
+            radial-gradient(circle at 20% 80%, rgba(8, 30, 59, 0.6) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(40, 150, 200, 0.3) 0%, transparent 50%),
+            radial-gradient(circle at 40% 40%, rgba(100, 255, 218, 0.2) 0%, transparent 50%)
+          `,
+          animation: 'nautical-drift 20s ease-in-out infinite alternate'
+        }}
+      />
+      
+      {/* Animated compass rose patterns */}
+      <div className="absolute inset-0 opacity-20">
+        {Array.from({ length: 8 }, (_, i) => (
+          <div
+            key={i}
+            className="absolute w-2 h-2 bg-yellow-400 rounded-full"
+            style={{
+              left: `${20 + (i * 10)}%`,
+              top: `${30 + (i * 5)}%`,
+              animation: `compass-glow 3s ease-in-out infinite ${i * 0.5}s`,
+              filter: 'blur(1px)'
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Depth contour lines */}
+      <div className="absolute inset-0 opacity-30">
+        {Array.from({ length: 6 }, (_, i) => (
+          <div
+            key={i}
+            className="absolute w-full h-px bg-gradient-to-r from-transparent via-blue-300 to-transparent"
+            style={{
+              top: `${15 + (i * 15)}%`,
+              animation: `depth-lines 8s ease-in-out infinite ${i * 1.2}s`,
+              transform: `rotate(${i * 2}deg)`
+            }}
+          />
+        ))}
+      </div>
+
+      <style jsx>{`
+        @keyframes nautical-drift {
+          0% { transform: translate(0, 0) rotate(0deg); }
+          100% { transform: translate(20px, -15px) rotate(2deg); }
+        }
+        
+        @keyframes compass-glow {
+          0%, 100% { opacity: 0.2; transform: scale(1); }
+          50% { opacity: 0.8; transform: scale(1.5); }
+        }
+        
+        @keyframes depth-lines {
+          0%, 100% { opacity: 0.1; transform: translateX(0); }
+          50% { opacity: 0.4; transform: translateX(10px); }
+        }
+      `}</style>
+    </div>
+  );
+
+  return webglSupported ? (
     <canvas
       ref={canvasRef}
       className="fixed top-0 left-0 w-full h-full -z-10"
       style={{ mixBlendMode: 'screen', opacity: 0.85 }}
     />
+  ) : (
+    <CSSFallback />
   );
 };
 

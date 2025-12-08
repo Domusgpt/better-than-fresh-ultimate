@@ -29,13 +29,15 @@ const NAUTICAL_COLORS = [
 ];
 
 const NauticalParticleField: React.FC<NauticalParticleFieldProps> = ({
-  density = 60,
+  density = 40, // Reduced for better performance
   scrollProgress = 0
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const particlesRef = useRef<Particle[]>([]);
   const mouseRef = useRef({ x: 0, y: 0 });
   const animationFrameRef = useRef<number>();
+  const lastFrameTime = useRef<number>(0);
+  const fpsTarget = 60; // Target FPS
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -127,7 +129,15 @@ const NauticalParticleField: React.FC<NauticalParticleFieldProps> = ({
     };
 
     let time = 0;
-    const animate = () => {
+    const animate = (currentTime: number = 0) => {
+      // Frame rate limiting for better performance
+      const deltaTime = currentTime - lastFrameTime.current;
+      if (deltaTime < 1000 / fpsTarget) {
+        animationFrameRef.current = requestAnimationFrame(animate);
+        return;
+      }
+      lastFrameTime.current = currentTime;
+
       time++;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
