@@ -255,16 +255,11 @@ const App: React.FC = () => {
         <nav className="fixed top-0 left-0 w-full p-8 flex justify-between items-center z-30 mix-blend-difference pointer-events-none">
           <div className="flex items-center gap-4 pointer-events-auto">
             <div className="relative group cursor-pointer">
-              {/* Nautical Crest Logo */}
-              <img 
-                src="/images/nautical-crest-logo.svg" 
-                alt="Better Than Fresh Logo" 
-                className="w-12 h-12 opacity-80 group-hover:opacity-100 transition-all duration-300 filter drop-shadow-lg group-hover:scale-110"
-              />
+               <ShipWheel className="text-gold-400 animate-[spin_12s_linear_infinite] group-hover:animate-[spin_3s_linear_infinite]" size={48} strokeWidth={1} />
             </div>
             <div className="leading-none border-l border-gold-500/50 pl-4">
               <span className="block font-serif text-xl font-bold tracking-widest text-parchment">BTF</span>
-              <span className="block text-[9px] tracking-[0.4em] text-gold-400 uppercase">Premium Seafood</span>
+              <span className="block text-[9px] tracking-[0.4em] text-gold-400 uppercase">Seafood Logic</span>
             </div>
           </div>
         </nav>
@@ -286,6 +281,15 @@ const App: React.FC = () => {
             <div className="flex justify-center gap-12 text-gold-500/60 font-mono text-xs tracking-[0.2em]">
               <span>LAT 08°58′N</span>
               <span>LON 79°32′W</span>
+            </div>
+
+            {/* Your Nautical Logo Above Title */}
+            <div className="mb-12 flex justify-center">
+              <img 
+                src="/images/nautical-logo.jpg" 
+                alt="Better Than Fresh Nautical Crest" 
+                className="w-32 h-32 md:w-40 md:h-40 opacity-90 filter drop-shadow-2xl rounded-lg"
+              />
             </div>
 
             <h1 className="text-8xl md:text-[11rem] font-serif leading-[0.8] text-parchment mix-blend-overlay opacity-90 drop-shadow-2xl tracking-tight">
@@ -376,13 +380,17 @@ const App: React.FC = () => {
 
         <footer ref={footerRef} className="text-center py-32 border-t border-parchment/5 relative overflow-hidden bg-navy-950">
            <div className="absolute inset-0 opacity-5 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
-           <div className="flex justify-center mb-8">
+           
+           {/* Your Logo in Footer */}
+           <div className="mb-8 flex justify-center">
              <img 
-               src="/images/nautical-crest-logo.svg" 
-               alt="Better Than Fresh Logo" 
-               className="w-16 h-16 opacity-80"
+               src="/images/nautical-logo.jpg" 
+               alt="Better Than Fresh Nautical Crest" 
+               className="w-20 h-20 opacity-80 filter drop-shadow-lg rounded-md"
              />
            </div>
+           
+           <Anchor className="mx-auto text-gold-500 mb-8 opacity-60" size={48} strokeWidth={1} />
            <p className="font-serif text-3xl text-parchment mb-6 tracking-wide">Better Than Fresh</p>
            <div className="flex justify-center gap-12 font-mono text-[10px] tracking-[0.2em] text-gold-500/50 uppercase">
               <span>Vertical Integration</span>
