@@ -10,6 +10,10 @@ interface Particle {
   alpha: number;
   life: number;
   depth: number; // depth sounding value
+  type: 'star' | 'compass' | 'anchor' | 'wave' | 'glow' | 'line';
+  layer: number; // 0-2 for depth layering
+  rotation: number;
+  rotationSpeed: number;
 }
 
 interface NauticalParticleFieldProps {
@@ -29,7 +33,7 @@ const NAUTICAL_COLORS = [
 ];
 
 const NauticalParticleField: React.FC<NauticalParticleFieldProps> = ({
-  density = 40, // Reduced for better performance
+  density = 120, // Increased for much better effects
   scrollProgress = 0
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -54,20 +58,49 @@ const NauticalParticleField: React.FC<NauticalParticleFieldProps> = ({
     resize();
     window.addEventListener('resize', resize);
 
-    // Initialize particles as navigation points
+    // Initialize particles with multiple types and layers
     const initParticles = () => {
       particlesRef.current = [];
+      const types = ['star', 'compass', 'anchor', 'wave', 'glow', 'line'] as const;
+      
       for (let i = 0; i < density; i++) {
+        const type = types[Math.floor(Math.random() * types.length)];
+        const layer = Math.floor(Math.random() * 3); // 0, 1, 2
+        
+        // Different size ranges for different types
+        let size;
+        switch (type) {
+          case 'compass':
+          case 'anchor':
+            size = Math.random() * 8 + 4; // 4-12px for larger nautical elements
+            break;
+          case 'star':
+            size = Math.random() * 6 + 2; // 2-8px for stars
+            break;
+          case 'glow':
+            size = Math.random() * 12 + 6; // 6-18px for glowing effects
+            break;
+          case 'line':
+            size = Math.random() * 20 + 10; // 10-30px for depth lines
+            break;
+          default:
+            size = Math.random() * 4 + 1; // 1-5px for waves
+        }
+
         particlesRef.current.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
-          vx: (Math.random() - 0.5) * 0.3,
-          vy: (Math.random() - 0.5) * 0.3,
-          size: Math.random() * 2.5 + 0.5,
+          vx: (Math.random() - 0.5) * (0.2 + layer * 0.1), // Faster movement in upper layers
+          vy: (Math.random() - 0.5) * (0.2 + layer * 0.1),
+          size,
           color: NAUTICAL_COLORS[Math.floor(Math.random() * NAUTICAL_COLORS.length)],
-          alpha: Math.random() * 0.4 + 0.1,
+          alpha: Math.random() * 0.6 + 0.1, // Increased alpha range
           life: Math.random() * 100,
-          depth: Math.random() * 100 // Fathom reading
+          depth: Math.random() * 100, // Fathom reading
+          type,
+          layer,
+          rotation: Math.random() * Math.PI * 2,
+          rotationSpeed: (Math.random() - 0.5) * 0.02
         });
       }
     };
@@ -110,6 +143,90 @@ const NauticalParticleField: React.FC<NauticalParticleFieldProps> = ({
       ctx.lineWidth = 0.5;
       ctx.stroke();
 
+      ctx.restore();
+    };
+
+    // Draw star particle
+    const drawStar = (ctx: CanvasRenderingContext2D, x: number, y: number, size: number, color: string, rotation: number) => {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(rotation);
+      
+      ctx.beginPath();
+      for (let i = 0; i < 10; i++) {
+        const angle = (i * Math.PI) / 5;
+        const radius = i % 2 === 0 ? size : size * 0.5;
+        const sx = Math.cos(angle) * radius;
+        const sy = Math.sin(angle) * radius;
+        if (i === 0) ctx.moveTo(sx, sy);
+        else ctx.lineTo(sx, sy);
+      }
+      ctx.closePath();
+      ctx.fillStyle = color;
+      ctx.fill();
+      ctx.restore();
+    };
+
+    // Draw anchor particle
+    const drawAnchor = (ctx: CanvasRenderingContext2D, x: number, y: number, size: number, color: string, rotation: number) => {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(rotation);
+      ctx.strokeStyle = color;
+      ctx.lineWidth = size * 0.1;
+      
+      // Anchor shape
+      ctx.beginPath();
+      ctx.moveTo(0, -size * 0.8);
+      ctx.lineTo(0, size * 0.8);
+      ctx.moveTo(-size * 0.5, size * 0.5);
+      ctx.lineTo(0, size * 0.8);
+      ctx.lineTo(size * 0.5, size * 0.5);
+      ctx.moveTo(-size * 0.3, -size * 0.6);
+      ctx.lineTo(size * 0.3, -size * 0.6);
+      ctx.stroke();
+      ctx.restore();
+    };
+
+    // Draw wave particle
+    const drawWave = (ctx: CanvasRenderingContext2D, x: number, y: number, size: number, color: string) => {
+      ctx.strokeStyle = color;
+      ctx.lineWidth = size * 0.3;
+      ctx.beginPath();
+      for (let i = 0; i < 3; i++) {
+        const waveX = x - size + (i * size * 0.7);
+        ctx.moveTo(waveX, y);
+        ctx.quadraticCurveTo(waveX + size * 0.2, y - size * 0.5, waveX + size * 0.4, y);
+      }
+      ctx.stroke();
+    };
+
+    // Draw glow particle  
+    const drawGlow = (ctx: CanvasRenderingContext2D, x: number, y: number, size: number, color: string) => {
+      const gradient = ctx.createRadialGradient(x, y, 0, x, y, size);
+      gradient.addColorStop(0, color);
+      gradient.addColorStop(1, 'transparent');
+      
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.arc(x, y, size, 0, Math.PI * 2);
+      ctx.fill();
+    };
+
+    // Draw depth line particle
+    const drawDepthLine = (ctx: CanvasRenderingContext2D, x: number, y: number, size: number, color: string, rotation: number) => {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(rotation);
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 1;
+      ctx.setLineDash([size * 0.3, size * 0.2]);
+      
+      ctx.beginPath();
+      ctx.moveTo(-size, 0);
+      ctx.lineTo(size, 0);
+      ctx.stroke();
+      ctx.setLineDash([]);
       ctx.restore();
     };
 
@@ -179,19 +296,35 @@ const NauticalParticleField: React.FC<NauticalParticleFieldProps> = ({
         if (particle.y < 0) particle.y = canvas.height;
         if (particle.y > canvas.height) particle.y = 0;
 
-        // Pulsing alpha - like stars through water
-        particle.alpha = 0.15 + Math.sin(particle.life * 0.015) * 0.2;
+        // Update rotation
+        particle.rotation += particle.rotationSpeed;
+        
+        // Enhanced alpha with layer depth
+        const layerAlphaMultiplier = 1 - (particle.layer * 0.3); // Upper layers more visible
+        particle.alpha = (0.15 + Math.sin(particle.life * 0.015) * 0.3) * layerAlphaMultiplier;
 
-        // Draw particle as navigation star
-        ctx.beginPath();
-        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-        ctx.fillStyle = particle.color;
         ctx.globalAlpha = particle.alpha;
-        ctx.fill();
 
-        // Occasionally draw compass rose on gold particles
-        if (particle.color === '#d4af37' && index % 10 === 0) {
-          drawCompassRose(ctx, particle.x, particle.y, 15 + particle.size * 5, particle.alpha);
+        // Draw particle based on type
+        switch (particle.type) {
+          case 'star':
+            drawStar(ctx, particle.x, particle.y, particle.size, particle.color, particle.rotation);
+            break;
+          case 'compass':
+            drawCompassRose(ctx, particle.x, particle.y, particle.size, particle.alpha);
+            break;
+          case 'anchor':
+            drawAnchor(ctx, particle.x, particle.y, particle.size, particle.color, particle.rotation);
+            break;
+          case 'wave':
+            drawWave(ctx, particle.x, particle.y, particle.size, particle.color);
+            break;
+          case 'glow':
+            drawGlow(ctx, particle.x, particle.y, particle.size, particle.color);
+            break;
+          case 'line':
+            drawDepthLine(ctx, particle.x, particle.y, particle.size, particle.color, particle.rotation);
+            break;
         }
 
         // Draw connections - like shipping lanes

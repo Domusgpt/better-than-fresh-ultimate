@@ -240,7 +240,7 @@ const App: React.FC = () => {
         scrollProgress={scrollProgress}
       />
       <NauticalParticleField
-        density={70}
+        density={150}
         scrollProgress={scrollProgress}
       />
       <DepthGauge />
