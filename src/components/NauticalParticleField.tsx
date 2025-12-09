@@ -90,8 +90,8 @@ const NauticalParticleField: React.FC<NauticalParticleFieldProps> = ({
         particlesRef.current.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
-          vx: (Math.random() - 0.5) * (0.2 + layer * 0.1), // Faster movement in upper layers
-          vy: (Math.random() - 0.5) * (0.2 + layer * 0.1),
+          vx: (Math.random() - 0.5) * (0.08 + layer * 0.02), // Much slower, gradual movement
+          vy: (Math.random() - 0.5) * (0.08 + layer * 0.02),
           size,
           color: NAUTICAL_COLORS[Math.floor(Math.random() * NAUTICAL_COLORS.length)],
           alpha: Math.random() * 0.6 + 0.1, // Increased alpha range
@@ -100,7 +100,7 @@ const NauticalParticleField: React.FC<NauticalParticleFieldProps> = ({
           type,
           layer,
           rotation: Math.random() * Math.PI * 2,
-          rotationSpeed: (Math.random() - 0.5) * 0.02
+          rotationSpeed: (Math.random() - 0.5) * 0.005 // Much slower rotation
         });
       }
     };

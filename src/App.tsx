@@ -5,6 +5,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import NauticalCartographyBackground from './components/NauticalCartographyBackground';
 import NauticalParticleField from './components/NauticalParticleField';
 import OceanCurrents from './components/OceanCurrents';
+import GeometricCompassRose from './components/GeometricCompassRose';
 import { IntroSequence } from './components/IntroSequence';
 import { ContentOverlay } from './components/ContentOverlay';
 import { STORY_CARDS } from './constants';
@@ -242,6 +243,10 @@ const App: React.FC = () => {
       <NauticalParticleField
         density={150}
         scrollProgress={scrollProgress}
+      />
+      <GeometricCompassRose
+        scrollProgress={scrollProgress}
+        sectionIndex={activeSectionIndex}
       />
       <DepthGauge />
 
