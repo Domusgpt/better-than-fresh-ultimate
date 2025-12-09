@@ -6,15 +6,17 @@ interface GeometricCompassRoseProps {
   className?: string;
 }
 
-interface Layer {
+interface CompassLayer {
+  type: 'outerRing' | 'cardinalPoints' | 'intermediatePoints' | 'innerRose' | 'centerStar' | 'ornamentals' | 'decorativeCircles';
   baseRadius: number;
-  points: number;
   strokeWidth: number;
   color: string;
-  baseAlpha: number;
-  type: 'compass' | 'mandala' | 'spiral' | 'rings' | 'sacred';
-  parallaxDepth: number; // 0-1, deeper layers move less
-  scrollSensitivity: number; // How much this layer responds to scroll
+  alpha: number;
+  rotationSpeed: number; // Different speeds for emergent motion
+  parallaxDepth: number; // 0-1 for depth layering
+  scrollSensitivity: number;
+  points?: number;
+  ornamentScale?: number;
 }
 
 const GeometricCompassRose: React.FC<GeometricCompassRoseProps> = ({
@@ -24,269 +26,372 @@ const GeometricCompassRose: React.FC<GeometricCompassRoseProps> = ({
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationFrameRef = useRef<number>();
-  const layersRef = useRef<Layer[]>([]);
+  const layersRef = useRef<CompassLayer[]>([]);
+  const timeRef = useRef<number>(0);
   const lastScrollProgress = useRef<number>(0);
   const scrollVelocity = useRef<number>(0);
-  const staticTime = useRef<number>(0);
 
-  // Color palette based on nautical theme
+  // Professional nautical color palette
   const NAUTICAL_PALETTE = {
-    gold: '#d4af37',
-    darkGold: '#c5a028', 
-    seaFoam: '#64ffda',
-    silverGrey: '#8892b0',
-    deepNavy: '#0a192f',
-    oceanBlue: '#112240',
-    parchment: '#e6f1ff'
+    deepGold: '#B8860B',      // Darker gold for outer elements
+    classicGold: '#d4af37',   // Primary compass gold
+    brightGold: '#FFD700',    // Accent highlights
+    seaFoam: '#64ffda',       // Mystical sea accent
+    silverGrey: '#8892b0',    // Secondary details
+    deepNavy: '#0a192f',      // Background elements
+    antiqueBrass: '#CD7F32',  // Ornamental details
+    ivory: '#FFF8DC'          // Highlight accents
   };
 
-  const PHI = (1 + Math.sqrt(5)) / 2; // Golden ratio
-  const TAU = Math.PI * 2;
-
-  // Initialize compass rose layers for GSAP scroll-driven animation
+  // Initialize professional compass layers with proper proportions
   const initializeLayers = useCallback(() => {
     layersRef.current = [
-      // Outermost compass rose - deepest parallax, least scroll sensitivity
+      // Layer 7: Outermost decorative ring (deepest parallax)
       {
-        baseRadius: 200,
-        points: 32,
-        strokeWidth: 0.8,
-        color: NAUTICAL_PALETTE.darkGold,
-        baseAlpha: 0.1,
-        type: 'compass',
-        parallaxDepth: 0.1, // Moves very little
-        scrollSensitivity: 0.2 // Low sensitivity to scroll
-      },
-      
-      // Sacred geometry mandala - medium depth
-      {
-        baseRadius: 150,
-        points: 24,
-        strokeWidth: 1.0,
-        color: NAUTICAL_PALETTE.silverGrey,
-        baseAlpha: 0.15,
-        type: 'sacred',
-        parallaxDepth: 0.3,
-        scrollSensitivity: 0.4
-      },
-      
-      // Concentric rings - mid parallax
-      {
-        baseRadius: 100,
-        points: 16,
-        strokeWidth: 1.5,
-        color: NAUTICAL_PALETTE.gold,
-        baseAlpha: 0.2,
-        type: 'rings',
-        parallaxDepth: 0.5,
-        scrollSensitivity: 0.6
-      },
-      
-      // Spiral geometry - responsive to scroll
-      {
-        baseRadius: 70,
-        points: 8,
+        type: 'outerRing',
+        baseRadius: 280,
         strokeWidth: 1.2,
-        color: NAUTICAL_PALETTE.seaFoam,
-        baseAlpha: 0.25,
-        type: 'spiral',
-        parallaxDepth: 0.7,
-        scrollSensitivity: 0.8
+        color: NAUTICAL_PALETTE.deepGold,
+        alpha: 0.15,
+        rotationSpeed: 0.002,
+        parallaxDepth: 0.1,
+        scrollSensitivity: 0.1,
+        ornamentScale: 1.0
       },
       
-      // Central mandala - most reactive
+      // Layer 6: Ornamental decorations around outer ring
       {
-        baseRadius: 40,
-        points: 12,
+        type: 'ornamentals',
+        baseRadius: 260,
+        strokeWidth: 0.8,
+        color: NAUTICAL_PALETTE.antiqueBrass,
+        alpha: 0.2,
+        rotationSpeed: -0.003,
+        parallaxDepth: 0.2,
+        scrollSensitivity: 0.15,
+        points: 16,
+        ornamentScale: 0.8
+      },
+
+      // Layer 5: Cardinal points (N, S, E, W) - most prominent
+      {
+        type: 'cardinalPoints',
+        baseRadius: 220,
+        strokeWidth: 2.5,
+        color: NAUTICAL_PALETTE.classicGold,
+        alpha: 0.4,
+        rotationSpeed: 0.001,
+        parallaxDepth: 0.3,
+        scrollSensitivity: 0.2,
+        points: 4
+      },
+
+      // Layer 4: Intermediate points (NE, NW, SE, SW)
+      {
+        type: 'intermediatePoints',
+        baseRadius: 200,
+        strokeWidth: 1.8,
+        color: NAUTICAL_PALETTE.silverGrey,
+        alpha: 0.35,
+        rotationSpeed: -0.004,
+        parallaxDepth: 0.4,
+        scrollSensitivity: 0.3,
+        points: 8
+      },
+
+      // Layer 3: Decorative circles at intermediate radii
+      {
+        type: 'decorativeCircles',
+        baseRadius: 160,
+        strokeWidth: 1.0,
+        color: NAUTICAL_PALETTE.seaFoam,
+        alpha: 0.25,
+        rotationSpeed: 0.006,
+        parallaxDepth: 0.5,
+        scrollSensitivity: 0.4,
+        points: 16
+      },
+
+      // Layer 2: Inner compass rose (detailed)
+      {
+        type: 'innerRose',
+        baseRadius: 120,
+        strokeWidth: 1.5,
+        color: NAUTICAL_PALETTE.brightGold,
+        alpha: 0.45,
+        rotationSpeed: -0.008,
+        parallaxDepth: 0.7,
+        scrollSensitivity: 0.6,
+        points: 32
+      },
+
+      // Layer 1: Central star (most responsive)
+      {
+        type: 'centerStar',
+        baseRadius: 60,
         strokeWidth: 2.0,
-        color: NAUTICAL_PALETTE.parchment,
-        baseAlpha: 0.3,
-        type: 'mandala',
+        color: NAUTICAL_PALETTE.ivory,
+        alpha: 0.6,
+        rotationSpeed: 0.01,
         parallaxDepth: 0.9,
-        scrollSensitivity: 1.0 // Full scroll sensitivity
+        scrollSensitivity: 0.8,
+        points: 16
       }
     ];
   }, []);
 
-  // Calculate scroll velocity for motion triggering
-  const updateScrollVelocity = useCallback(() => {
-    const velocity = Math.abs(scrollProgress - lastScrollProgress.current);
-    scrollVelocity.current = scrollVelocity.current * 0.9 + velocity * 0.1; // Smooth velocity
-    lastScrollProgress.current = scrollProgress;
+  // Calculate emergent motion with proper timing
+  const updateMotion = useCallback(() => {
+    timeRef.current += 0.016; // ~60fps increment
     
-    // Track static time when not scrolling
-    if (velocity < 0.001) {
-      staticTime.current += 1;
-    } else {
-      staticTime.current = 0;
-    }
+    // Calculate scroll velocity for reactive motion
+    const velocity = Math.abs(scrollProgress - lastScrollProgress.current);
+    scrollVelocity.current = scrollVelocity.current * 0.95 + velocity * 0.05;
+    lastScrollProgress.current = scrollProgress;
   }, [scrollProgress]);
 
-  // Section-specific transformations
-  const getSectionTransform = useCallback((layer: Layer, layerIndex: number) => {
-    const sectionIntensity = Math.sin(scrollProgress * TAU) * 0.3 + 0.7; // 0.4 - 1.0
-    const scrollIntensity = scrollVelocity.current * 10; // Amplify scroll effect
+  // Get section-specific transformations with professional styling
+  const getSectionTransform = useCallback((layer: CompassLayer, layerIndex: number) => {
+    const baseTime = timeRef.current * layer.rotationSpeed;
+    const scrollMotion = scrollProgress * Math.PI * 2 * layer.scrollSensitivity;
+    const velocityBoost = scrollVelocity.current * 20; // Amplify for visibility
     
-    let radiusMultiplier = 1;
-    let alphaMultiplier = 1;
-    let rotationOffset = 0;
+    // Section-specific enhancements
+    let radiusMultiplier = 1.0;
+    let alphaMultiplier = 1.0;
+    let rotationMultiplier = 1.0;
     
     switch (sectionIndex) {
-      case 0: // Hero - minimal activity
-        radiusMultiplier = 1 + scrollIntensity * 0.1;
-        alphaMultiplier = 0.7 + scrollIntensity * 0.3;
+      case 0: // Hero - subtle presence
+        alphaMultiplier = 0.7;
         break;
         
-      case 1: // Frozen Standard - expansion
-        radiusMultiplier = 1 + scrollIntensity * 0.3 + sectionIntensity * 0.2;
-        alphaMultiplier = 0.8 + scrollIntensity * 0.4;
-        rotationOffset = scrollProgress * TAU * (layerIndex + 1) * 0.1;
+      case 1: // Frozen Standard - gentle expansion
+        radiusMultiplier = 1.0 + velocityBoost * 0.1;
+        alphaMultiplier = 0.8 + velocityBoost * 0.2;
         break;
         
-      case 2: // Yellowfin Tuna - spiral focus
-        if (layer.type === 'spiral') {
-          radiusMultiplier = 1.5 + scrollIntensity * 0.5;
-          alphaMultiplier = 1.2 + scrollIntensity * 0.6;
+      case 2: // Yellowfin Tuna - inner layers activation
+        if (layer.type === 'innerRose' || layer.type === 'centerStar') {
+          radiusMultiplier = 1.1 + velocityBoost * 0.15;
+          alphaMultiplier = 1.2;
+          rotationMultiplier = 1.3;
         }
-        rotationOffset = scrollProgress * TAU * (layerIndex + 1) * 0.2;
         break;
         
-      case 3: // Premium Catch - mandala expansion
-        if (layer.type === 'mandala' || layer.type === 'sacred') {
-          radiusMultiplier = 1.3 + scrollIntensity * 0.4 + sectionIntensity * 0.3;
-          alphaMultiplier = 1.1 + scrollIntensity * 0.5;
+      case 3: // Premium Catch - ornamental enhancement
+        if (layer.type === 'ornamentals' || layer.type === 'decorativeCircles') {
+          radiusMultiplier = 1.15 + velocityBoost * 0.2;
+          alphaMultiplier = 1.1;
         }
-        rotationOffset = scrollProgress * TAU * (layerIndex + 1) * 0.15;
         break;
         
-      case 4: // Vertical Integration - complex geometry
-        radiusMultiplier = 1.2 + scrollIntensity * 0.6 + sectionIntensity * 0.4;
-        alphaMultiplier = 1 + scrollIntensity * 0.8;
-        rotationOffset = scrollProgress * TAU * (layerIndex + 1) * 0.25;
+      case 4: // Vertical Integration - full compass activation
+        radiusMultiplier = 1.05 + velocityBoost * 0.3;
+        alphaMultiplier = 0.9 + velocityBoost * 0.4;
+        rotationMultiplier = 1.2;
         break;
         
       default:
-        radiusMultiplier = 1 + scrollIntensity * 0.1;
-        alphaMultiplier = 0.6 + scrollIntensity * 0.2;
+        alphaMultiplier = 0.8;
     }
     
     return {
       radius: layer.baseRadius * radiusMultiplier,
-      alpha: layer.baseAlpha * alphaMultiplier * (1 - layer.parallaxDepth * 0.3),
-      rotation: rotationOffset + (staticTime.current > 100 ? 0 : scrollProgress * TAU * layer.scrollSensitivity)
+      alpha: layer.alpha * alphaMultiplier * (1 - layer.parallaxDepth * 0.2),
+      rotation: (baseTime + scrollMotion) * rotationMultiplier,
+      scale: 1 + velocityBoost * 0.05
     };
-  }, [sectionIndex, scrollProgress, staticTime]);
+  }, [sectionIndex, scrollProgress, scrollVelocity]);
 
-  // Draw compass rose pattern
-  const drawCompass = (
-    ctx: CanvasRenderingContext2D,
-    centerX: number,
-    centerY: number,
-    layer: Layer,
-    transform: any
-  ) => {
+  // Draw outer decorative ring with proper proportions
+  const drawOuterRing = (ctx: CanvasRenderingContext2D, centerX: number, centerY: number, layer: CompassLayer, transform: any) => {
     ctx.save();
     ctx.translate(centerX, centerY);
-    ctx.rotate(transform.rotation);
+    ctx.scale(transform.scale, transform.scale);
     
     ctx.strokeStyle = layer.color;
     ctx.lineWidth = layer.strokeWidth;
     ctx.globalAlpha = transform.alpha;
     
-    // Main compass points
-    const angleStep = TAU / layer.points;
-    for (let i = 0; i < layer.points; i++) {
-      const angle = i * angleStep;
-      const isCardinal = i % (layer.points / 4) === 0;
-      const length = isCardinal ? transform.radius : transform.radius * 0.7;
-      const weight = isCardinal ? layer.strokeWidth * 1.5 : layer.strokeWidth;
+    // Outer circle
+    ctx.beginPath();
+    ctx.arc(0, 0, transform.radius, 0, Math.PI * 2);
+    ctx.stroke();
+    
+    // Inner decorative ring
+    ctx.beginPath();
+    ctx.arc(0, 0, transform.radius * 0.95, 0, Math.PI * 2);
+    ctx.stroke();
+    
+    // Decorative tick marks around circumference
+    const ticks = 72; // Fine detail
+    for (let i = 0; i < ticks; i++) {
+      const angle = (i / ticks) * Math.PI * 2;
+      const isMajor = i % 6 === 0;
+      const length = isMajor ? 8 : 4;
+      const weight = isMajor ? layer.strokeWidth * 1.5 : layer.strokeWidth * 0.8;
       
       ctx.lineWidth = weight;
+      ctx.beginPath();
+      ctx.moveTo(
+        Math.cos(angle) * (transform.radius - length),
+        Math.sin(angle) * (transform.radius - length)
+      );
+      ctx.lineTo(
+        Math.cos(angle) * transform.radius,
+        Math.sin(angle) * transform.radius
+      );
+      ctx.stroke();
+    }
+    
+    ctx.restore();
+  };
+
+  // Draw ornamental decorations with floral-inspired details
+  const drawOrnamentals = (ctx: CanvasRenderingContext2D, centerX: number, centerY: number, layer: CompassLayer, transform: any) => {
+    ctx.save();
+    ctx.translate(centerX, centerY);
+    ctx.rotate(transform.rotation);
+    ctx.scale(transform.scale, transform.scale);
+    
+    ctx.strokeStyle = layer.color;
+    ctx.lineWidth = layer.strokeWidth;
+    ctx.globalAlpha = transform.alpha;
+    
+    const ornaments = layer.points || 16;
+    for (let i = 0; i < ornaments; i++) {
+      const angle = (i / ornaments) * Math.PI * 2;
+      const x = Math.cos(angle) * transform.radius;
+      const y = Math.sin(angle) * transform.radius;
+      
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(angle + Math.PI / 2);
+      
+      // Floral ornament shape
+      const size = 12 * (layer.ornamentScale || 1);
+      ctx.beginPath();
+      ctx.moveTo(0, -size);
+      ctx.quadraticCurveTo(size * 0.3, -size * 0.7, size * 0.5, -size * 0.3);
+      ctx.quadraticCurveTo(size * 0.3, 0, 0, size * 0.2);
+      ctx.quadraticCurveTo(-size * 0.3, 0, -size * 0.5, -size * 0.3);
+      ctx.quadraticCurveTo(-size * 0.3, -size * 0.7, 0, -size);
+      ctx.stroke();
+      
+      ctx.restore();
+    }
+    
+    ctx.restore();
+  };
+
+  // Draw cardinal points with proper nautical styling
+  const drawCardinalPoints = (ctx: CanvasRenderingContext2D, centerX: number, centerY: number, layer: CompassLayer, transform: any) => {
+    ctx.save();
+    ctx.translate(centerX, centerY);
+    ctx.rotate(transform.rotation);
+    ctx.scale(transform.scale, transform.scale);
+    
+    ctx.strokeStyle = layer.color;
+    ctx.fillStyle = layer.color;
+    ctx.lineWidth = layer.strokeWidth;
+    ctx.globalAlpha = transform.alpha;
+    
+    const cardinals = ['N', 'E', 'S', 'W'];
+    
+    for (let i = 0; i < 4; i++) {
+      const angle = (i / 4) * Math.PI * 2;
+      const x = Math.cos(angle) * transform.radius;
+      const y = Math.sin(angle) * transform.radius;
+      
+      // Main cardinal ray
+      ctx.lineWidth = layer.strokeWidth;
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(x, y);
+      ctx.stroke();
+      
+      // Cardinal point arrow
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(angle + Math.PI / 2);
+      
+      const arrowSize = 20;
+      ctx.beginPath();
+      ctx.moveTo(0, -arrowSize);
+      ctx.lineTo(-arrowSize * 0.4, arrowSize * 0.3);
+      ctx.lineTo(arrowSize * 0.4, arrowSize * 0.3);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+      
+      ctx.restore();
+    }
+    
+    ctx.restore();
+  };
+
+  // Draw intermediate points (half-winds)
+  const drawIntermediatePoints = (ctx: CanvasRenderingContext2D, centerX: number, centerY: number, layer: CompassLayer, transform: any) => {
+    ctx.save();
+    ctx.translate(centerX, centerY);
+    ctx.rotate(transform.rotation);
+    ctx.scale(transform.scale, transform.scale);
+    
+    ctx.strokeStyle = layer.color;
+    ctx.lineWidth = layer.strokeWidth;
+    ctx.globalAlpha = transform.alpha;
+    
+    const points = layer.points || 8;
+    for (let i = 0; i < points; i++) {
+      const angle = (i / points) * Math.PI * 2 + (Math.PI / points); // Offset from cardinals
+      const length = i % 2 === 0 ? transform.radius : transform.radius * 0.75;
+      
       ctx.beginPath();
       ctx.moveTo(0, 0);
       ctx.lineTo(Math.cos(angle) * length, Math.sin(angle) * length);
       ctx.stroke();
-    }
-    
-    // Center circle
-    ctx.beginPath();
-    ctx.arc(0, 0, transform.radius * 0.1, 0, TAU);
-    ctx.stroke();
-    
-    ctx.restore();
-  };
-
-  // Draw sacred geometry patterns
-  const drawSacred = (
-    ctx: CanvasRenderingContext2D,
-    centerX: number,
-    centerY: number,
-    layer: Layer,
-    transform: any
-  ) => {
-    ctx.save();
-    ctx.translate(centerX, centerY);
-    
-    ctx.strokeStyle = layer.color;
-    ctx.lineWidth = layer.strokeWidth;
-    ctx.globalAlpha = transform.alpha;
-    
-    // Flower of life pattern
-    const petalRadius = transform.radius / 3;
-    for (let i = 0; i < 6; i++) {
-      const angle = (i * TAU) / 6 + transform.rotation;
-      const x = Math.cos(angle) * petalRadius;
-      const y = Math.sin(angle) * petalRadius;
       
+      // Small decorative end
+      const endX = Math.cos(angle) * length;
+      const endY = Math.sin(angle) * length;
       ctx.beginPath();
-      ctx.arc(x, y, petalRadius, 0, TAU);
+      ctx.arc(endX, endY, 3, 0, Math.PI * 2);
       ctx.stroke();
     }
     
-    // Central circle
-    ctx.beginPath();
-    ctx.arc(0, 0, petalRadius, 0, TAU);
-    ctx.stroke();
-    
     ctx.restore();
   };
 
-  // Draw concentric rings
-  const drawRings = (
-    ctx: CanvasRenderingContext2D,
-    centerX: number,
-    centerY: number,
-    layer: Layer,
-    transform: any
-  ) => {
+  // Draw decorative circles at various radii
+  const drawDecorativeCircles = (ctx: CanvasRenderingContext2D, centerX: number, centerY: number, layer: CompassLayer, transform: any) => {
     ctx.save();
     ctx.translate(centerX, centerY);
     ctx.rotate(transform.rotation);
+    ctx.scale(transform.scale, transform.scale);
     
     ctx.strokeStyle = layer.color;
     ctx.lineWidth = layer.strokeWidth;
     ctx.globalAlpha = transform.alpha;
     
-    // Multiple concentric circles
-    const rings = 5;
-    for (let i = 1; i <= rings; i++) {
-      const radius = (transform.radius * i) / rings;
+    // Multiple concentric decorative circles
+    const circles = 3;
+    for (let i = 1; i <= circles; i++) {
+      const radius = (transform.radius * i) / circles;
       ctx.beginPath();
-      ctx.arc(0, 0, radius, 0, TAU);
+      ctx.arc(0, 0, radius, 0, Math.PI * 2);
       ctx.stroke();
       
-      // Add tick marks
-      if (i === rings) {
-        const ticks = layer.points;
-        for (let j = 0; j < ticks; j++) {
-          const angle = (j * TAU) / ticks;
-          const inner = radius * 0.9;
-          const outer = radius * 1.1;
-          
+      // Small decorative dots around circle
+      if (i === circles) {
+        const dots = layer.points || 16;
+        for (let j = 0; j < dots; j++) {
+          const angle = (j / dots) * Math.PI * 2;
+          const dotX = Math.cos(angle) * radius;
+          const dotY = Math.sin(angle) * radius;
           ctx.beginPath();
-          ctx.moveTo(Math.cos(angle) * inner, Math.sin(angle) * inner);
-          ctx.lineTo(Math.cos(angle) * outer, Math.sin(angle) * outer);
-          ctx.stroke();
+          ctx.arc(dotX, dotY, 2, 0, Math.PI * 2);
+          ctx.fill();
         }
       }
     }
@@ -294,94 +399,70 @@ const GeometricCompassRose: React.FC<GeometricCompassRoseProps> = ({
     ctx.restore();
   };
 
-  // Draw golden ratio spiral
-  const drawSpiral = (
-    ctx: CanvasRenderingContext2D,
-    centerX: number,
-    centerY: number,
-    layer: Layer,
-    transform: any
-  ) => {
+  // Draw detailed inner compass rose
+  const drawInnerRose = (ctx: CanvasRenderingContext2D, centerX: number, centerY: number, layer: CompassLayer, transform: any) => {
     ctx.save();
     ctx.translate(centerX, centerY);
     ctx.rotate(transform.rotation);
+    ctx.scale(transform.scale, transform.scale);
     
     ctx.strokeStyle = layer.color;
     ctx.lineWidth = layer.strokeWidth;
     ctx.globalAlpha = transform.alpha;
     
-    // Golden ratio spiral
-    ctx.beginPath();
-    let angle = 0;
-    let radius = 1;
-    const maxRadius = transform.radius;
-    
-    ctx.moveTo(radius, 0);
-    while (radius < maxRadius) {
-      angle += 0.1;
-      radius = Math.pow(PHI, angle * 0.1) * 2;
-      const x = Math.cos(angle) * radius;
-      const y = Math.sin(angle) * radius;
-      ctx.lineTo(x, y);
-    }
-    ctx.stroke();
-    
-    // Mirror spiral
-    ctx.scale(-1, 1);
-    ctx.beginPath();
-    angle = 0;
-    radius = 1;
-    ctx.moveTo(radius, 0);
-    while (radius < maxRadius) {
-      angle += 0.1;
-      radius = Math.pow(PHI, angle * 0.1) * 2;
-      const x = Math.cos(angle) * radius;
-      const y = Math.sin(angle) * radius;
-      ctx.lineTo(x, y);
-    }
-    ctx.stroke();
-    
-    ctx.restore();
-  };
-
-  // Draw mandala pattern
-  const drawMandala = (
-    ctx: CanvasRenderingContext2D,
-    centerX: number,
-    centerY: number,
-    layer: Layer,
-    transform: any
-  ) => {
-    ctx.save();
-    ctx.translate(centerX, centerY);
-    ctx.rotate(transform.rotation);
-    
-    ctx.strokeStyle = layer.color;
-    ctx.lineWidth = layer.strokeWidth;
-    ctx.globalAlpha = transform.alpha;
-    
-    // Petal mandala
-    const petals = layer.points;
-    const petalLength = transform.radius * 0.8;
-    
-    for (let i = 0; i < petals; i++) {
-      const angle = (i * TAU) / petals;
-      const x = Math.cos(angle) * petalLength;
-      const y = Math.sin(angle) * petalLength;
+    const rays = layer.points || 32;
+    for (let i = 0; i < rays; i++) {
+      const angle = (i / rays) * Math.PI * 2;
+      const isMainRay = i % 8 === 0;
+      const length = isMainRay ? transform.radius : transform.radius * 0.7;
+      const weight = isMainRay ? layer.strokeWidth * 1.3 : layer.strokeWidth * 0.8;
       
-      // Draw petal curve
+      ctx.lineWidth = weight;
       ctx.beginPath();
-      ctx.moveTo(0, 0);
-      ctx.quadraticCurveTo(x * 0.5, y * 0.5, x, y);
-      ctx.quadraticCurveTo(x * 1.2, y * 0.8, x * 0.8, 0);
-      ctx.quadraticCurveTo(x * 0.5, -y * 0.3, 0, 0);
+      ctx.moveTo(Math.cos(angle) * transform.radius * 0.3, Math.sin(angle) * transform.radius * 0.3);
+      ctx.lineTo(Math.cos(angle) * length, Math.sin(angle) * length);
       ctx.stroke();
     }
     
     ctx.restore();
   };
 
-  // Main render loop
+  // Draw central star with professional detail
+  const drawCenterStar = (ctx: CanvasRenderingContext2D, centerX: number, centerY: number, layer: CompassLayer, transform: any) => {
+    ctx.save();
+    ctx.translate(centerX, centerY);
+    ctx.rotate(transform.rotation);
+    ctx.scale(transform.scale, transform.scale);
+    
+    ctx.strokeStyle = layer.color;
+    ctx.fillStyle = layer.color;
+    ctx.lineWidth = layer.strokeWidth;
+    ctx.globalAlpha = transform.alpha;
+    
+    // 16-point star
+    const points = layer.points || 16;
+    ctx.beginPath();
+    for (let i = 0; i < points * 2; i++) {
+      const angle = (i / (points * 2)) * Math.PI * 2;
+      const radius = i % 2 === 0 ? transform.radius : transform.radius * 0.5;
+      const x = Math.cos(angle) * radius;
+      const y = Math.sin(angle) * radius;
+      
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+    ctx.stroke();
+    
+    // Central circle
+    ctx.beginPath();
+    ctx.arc(0, 0, transform.radius * 0.15, 0, Math.PI * 2);
+    ctx.fill();
+    
+    ctx.restore();
+  };
+
+  // Main render loop with proper layer ordering
   const render = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -393,39 +474,42 @@ const GeometricCompassRose: React.FC<GeometricCompassRoseProps> = ({
     const centerX = width / 2;
     const centerY = height / 2;
 
-    // Clear canvas
     ctx.clearRect(0, 0, width, height);
+    updateMotion();
 
-    updateScrollVelocity();
-
-    // Render each layer with parallax and scroll responsiveness
+    // Render layers from back to front for proper depth
     layersRef.current.forEach((layer, index) => {
       const transform = getSectionTransform(layer, index);
       
-      // Only render if alpha is significant
-      if (transform.alpha < 0.01) return;
+      if (transform.alpha < 0.02) return; // Skip nearly invisible layers
       
       switch (layer.type) {
-        case 'compass':
-          drawCompass(ctx, centerX, centerY, layer, transform);
+        case 'outerRing':
+          drawOuterRing(ctx, centerX, centerY, layer, transform);
           break;
-        case 'sacred':
-          drawSacred(ctx, centerX, centerY, layer, transform);
+        case 'ornamentals':
+          drawOrnamentals(ctx, centerX, centerY, layer, transform);
           break;
-        case 'rings':
-          drawRings(ctx, centerX, centerY, layer, transform);
+        case 'cardinalPoints':
+          drawCardinalPoints(ctx, centerX, centerY, layer, transform);
           break;
-        case 'spiral':
-          drawSpiral(ctx, centerX, centerY, layer, transform);
+        case 'intermediatePoints':
+          drawIntermediatePoints(ctx, centerX, centerY, layer, transform);
           break;
-        case 'mandala':
-          drawMandala(ctx, centerX, centerY, layer, transform);
+        case 'decorativeCircles':
+          drawDecorativeCircles(ctx, centerX, centerY, layer, transform);
+          break;
+        case 'innerRose':
+          drawInnerRose(ctx, centerX, centerY, layer, transform);
+          break;
+        case 'centerStar':
+          drawCenterStar(ctx, centerX, centerY, layer, transform);
           break;
       }
     });
 
     animationFrameRef.current = requestAnimationFrame(render);
-  }, [updateScrollVelocity, getSectionTransform]);
+  }, [updateMotion, getSectionTransform]);
 
   // Setup and cleanup
   useEffect(() => {
@@ -457,7 +541,7 @@ const GeometricCompassRose: React.FC<GeometricCompassRoseProps> = ({
       className={`fixed top-0 left-0 w-full h-full pointer-events-none ${className}`}
       style={{ 
         mixBlendMode: 'screen',
-        opacity: 0.9,
+        opacity: 0.8,
         zIndex: 1
       }}
     />
