@@ -4,6 +4,10 @@ interface GeometricCompassRoseProps {
   scrollProgress: number;
   sectionIndex: number;
   className?: string;
+  isHovering?: boolean;
+  isClicked?: boolean;
+  isExpanded?: boolean;
+  mousePosition?: { x: number; y: number };
 }
 
 interface CompassLayer {
@@ -17,12 +21,21 @@ interface CompassLayer {
   scrollSensitivity: number;
   points?: number;
   ornamentScale?: number;
+  // Enhanced movement properties
+  rotationDirection: number; // 1 or -1 for clockwise/counter-clockwise
+  oscillationSpeed?: number; // For wobble effects
+  breathingSpeed?: number; // For pulsing radius
+  interactionMultiplier?: number; // Response to user interactions
 }
 
 const GeometricCompassRose: React.FC<GeometricCompassRoseProps> = ({
   scrollProgress,
   sectionIndex,
-  className = ""
+  className = "",
+  isHovering = false,
+  isClicked = false,
+  isExpanded = false,
+  mousePosition = { x: 0, y: 0 }
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationFrameRef = useRef<number>();
@@ -56,7 +69,11 @@ const GeometricCompassRose: React.FC<GeometricCompassRoseProps> = ({
         rotationSpeed: 0.002,
         parallaxDepth: 0.1,
         scrollSensitivity: 0.1,
-        ornamentScale: 1.0
+        ornamentScale: 1.0,
+        rotationDirection: 1,
+        oscillationSpeed: 0.001,
+        breathingSpeed: 0.003,
+        interactionMultiplier: 0.5
       },
       
       // Layer 6: Ornamental decorations around outer ring
@@ -66,11 +83,15 @@ const GeometricCompassRose: React.FC<GeometricCompassRoseProps> = ({
         strokeWidth: 0.8,
         color: NAUTICAL_PALETTE.antiqueBrass,
         alpha: 0.2,
-        rotationSpeed: -0.003,
+        rotationSpeed: 0.003,
         parallaxDepth: 0.2,
         scrollSensitivity: 0.15,
         points: 16,
-        ornamentScale: 0.8
+        ornamentScale: 0.8,
+        rotationDirection: -1, // Counter-clockwise
+        oscillationSpeed: 0.002,
+        breathingSpeed: 0.004,
+        interactionMultiplier: 0.8
       },
 
       // Layer 5: Cardinal points (N, S, E, W) - most prominent
@@ -83,7 +104,11 @@ const GeometricCompassRose: React.FC<GeometricCompassRoseProps> = ({
         rotationSpeed: 0.001,
         parallaxDepth: 0.3,
         scrollSensitivity: 0.2,
-        points: 4
+        points: 4,
+        rotationDirection: 1,
+        oscillationSpeed: 0.0005,
+        breathingSpeed: 0.002,
+        interactionMultiplier: 1.2
       },
 
       // Layer 4: Intermediate points (NE, NW, SE, SW)
@@ -93,10 +118,14 @@ const GeometricCompassRose: React.FC<GeometricCompassRoseProps> = ({
         strokeWidth: 1.8,
         color: NAUTICAL_PALETTE.silverGrey,
         alpha: 0.35,
-        rotationSpeed: -0.004,
+        rotationSpeed: 0.004,
         parallaxDepth: 0.4,
         scrollSensitivity: 0.3,
-        points: 8
+        points: 8,
+        rotationDirection: -1, // Counter-clockwise
+        oscillationSpeed: 0.003,
+        breathingSpeed: 0.001,
+        interactionMultiplier: 0.9
       },
 
       // Layer 3: Decorative circles at intermediate radii
@@ -109,7 +138,11 @@ const GeometricCompassRose: React.FC<GeometricCompassRoseProps> = ({
         rotationSpeed: 0.006,
         parallaxDepth: 0.5,
         scrollSensitivity: 0.4,
-        points: 16
+        points: 16,
+        rotationDirection: 1,
+        oscillationSpeed: 0.004,
+        breathingSpeed: 0.005,
+        interactionMultiplier: 1.5
       },
 
       // Layer 2: Inner compass rose (detailed)
@@ -119,10 +152,14 @@ const GeometricCompassRose: React.FC<GeometricCompassRoseProps> = ({
         strokeWidth: 1.5,
         color: NAUTICAL_PALETTE.brightGold,
         alpha: 0.45,
-        rotationSpeed: -0.008,
+        rotationSpeed: 0.008,
         parallaxDepth: 0.7,
         scrollSensitivity: 0.6,
-        points: 32
+        points: 32,
+        rotationDirection: -1, // Counter-clockwise
+        oscillationSpeed: 0.006,
+        breathingSpeed: 0.008,
+        interactionMultiplier: 2.0
       },
 
       // Layer 1: Central star (most responsive)
@@ -135,7 +172,11 @@ const GeometricCompassRose: React.FC<GeometricCompassRoseProps> = ({
         rotationSpeed: 0.01,
         parallaxDepth: 0.9,
         scrollSensitivity: 0.8,
-        points: 16
+        points: 16,
+        rotationDirection: 1,
+        oscillationSpeed: 0.008,
+        breathingSpeed: 0.01,
+        interactionMultiplier: 3.0
       }
     ];
   }, []);
@@ -150,16 +191,39 @@ const GeometricCompassRose: React.FC<GeometricCompassRoseProps> = ({
     lastScrollProgress.current = scrollProgress;
   }, [scrollProgress]);
 
-  // Get section-specific transformations with professional styling
+  // Get section-specific transformations with enhanced movement and interactions
   const getSectionTransform = useCallback((layer: CompassLayer, layerIndex: number) => {
-    const baseTime = timeRef.current * layer.rotationSpeed;
+    const baseTime = timeRef.current * layer.rotationSpeed * layer.rotationDirection;
     const scrollMotion = scrollProgress * Math.PI * 2 * layer.scrollSensitivity;
-    const velocityBoost = scrollVelocity.current * 20; // Amplify for visibility
+    const velocityBoost = scrollVelocity.current * 20;
+    
+    // Enhanced movement calculations
+    const oscillation = layer.oscillationSpeed ? Math.sin(timeRef.current * layer.oscillationSpeed * 100) * 0.1 : 0;
+    const breathing = layer.breathingSpeed ? Math.sin(timeRef.current * layer.breathingSpeed * 100) * 0.05 : 0;
+    
+    // Interaction flourishes
+    const hoverBoost = isHovering ? layer.interactionMultiplier || 1 : 1;
+    const clickFlourish = isClicked ? 1.5 : 1;
+    const expandEffect = isExpanded ? 1.3 : 1;
+    
+    // Mouse proximity effect for dynamic response
+    const canvas = canvasRef.current;
+    let proximityEffect = 1;
+    if (canvas && mousePosition) {
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+      const distance = Math.sqrt(
+        Math.pow(mousePosition.x - centerX, 2) + 
+        Math.pow(mousePosition.y - centerY, 2)
+      );
+      const maxDistance = Math.min(canvas.width, canvas.height) / 2;
+      proximityEffect = 1 + (1 - Math.min(distance / maxDistance, 1)) * 0.2;
+    }
     
     // Section-specific enhancements
-    let radiusMultiplier = 1.0;
+    let radiusMultiplier = 1.0 + breathing;
     let alphaMultiplier = 1.0;
-    let rotationMultiplier = 1.0;
+    let rotationMultiplier = hoverBoost * clickFlourish * expandEffect * proximityEffect;
     
     switch (sectionIndex) {
       case 0: // Hero - subtle presence
@@ -197,21 +261,31 @@ const GeometricCompassRose: React.FC<GeometricCompassRoseProps> = ({
     }
     
     return {
-      radius: layer.baseRadius * radiusMultiplier,
-      alpha: layer.alpha * alphaMultiplier * (1 - layer.parallaxDepth * 0.2),
-      rotation: (baseTime + scrollMotion) * rotationMultiplier,
-      scale: 1 + velocityBoost * 0.05
+      radius: layer.baseRadius * radiusMultiplier * proximityEffect,
+      alpha: layer.alpha * alphaMultiplier * (1 - layer.parallaxDepth * 0.2) * (1 + (clickFlourish - 1) * 0.5),
+      rotation: (baseTime + scrollMotion + oscillation) * rotationMultiplier,
+      scale: (1 + velocityBoost * 0.05) * expandEffect,
+      strokeWidth: layer.strokeWidth * clickFlourish,
+      glow: isHovering || isClicked || isExpanded
     };
-  }, [sectionIndex, scrollProgress, scrollVelocity]);
+  }, [sectionIndex, scrollProgress, scrollVelocity, isHovering, isClicked, isExpanded, mousePosition]);
 
-  // Draw outer decorative ring with proper proportions
+  // Draw outer decorative ring with enhanced effects
   const drawOuterRing = (ctx: CanvasRenderingContext2D, centerX: number, centerY: number, layer: CompassLayer, transform: any) => {
     ctx.save();
     ctx.translate(centerX, centerY);
     ctx.scale(transform.scale, transform.scale);
     
+    // Add glow effect for interactions
+    if (transform.glow) {
+      ctx.shadowColor = layer.color;
+      ctx.shadowBlur = 15;
+      ctx.shadowOffsetX = 0;
+      ctx.shadowOffsetY = 0;
+    }
+    
     ctx.strokeStyle = layer.color;
-    ctx.lineWidth = layer.strokeWidth;
+    ctx.lineWidth = transform.strokeWidth;
     ctx.globalAlpha = transform.alpha;
     
     // Outer circle
@@ -248,15 +322,20 @@ const GeometricCompassRose: React.FC<GeometricCompassRoseProps> = ({
     ctx.restore();
   };
 
-  // Draw ornamental decorations with floral-inspired details
+  // Draw ornamental decorations with enhanced effects
   const drawOrnamentals = (ctx: CanvasRenderingContext2D, centerX: number, centerY: number, layer: CompassLayer, transform: any) => {
     ctx.save();
     ctx.translate(centerX, centerY);
     ctx.rotate(transform.rotation);
     ctx.scale(transform.scale, transform.scale);
     
+    if (transform.glow) {
+      ctx.shadowColor = layer.color;
+      ctx.shadowBlur = 12;
+    }
+    
     ctx.strokeStyle = layer.color;
-    ctx.lineWidth = layer.strokeWidth;
+    ctx.lineWidth = transform.strokeWidth;
     ctx.globalAlpha = transform.alpha;
     
     const ornaments = layer.points || 16;
@@ -285,16 +364,21 @@ const GeometricCompassRose: React.FC<GeometricCompassRoseProps> = ({
     ctx.restore();
   };
 
-  // Draw cardinal points with proper nautical styling
+  // Draw cardinal points with enhanced effects
   const drawCardinalPoints = (ctx: CanvasRenderingContext2D, centerX: number, centerY: number, layer: CompassLayer, transform: any) => {
     ctx.save();
     ctx.translate(centerX, centerY);
     ctx.rotate(transform.rotation);
     ctx.scale(transform.scale, transform.scale);
     
+    if (transform.glow) {
+      ctx.shadowColor = layer.color;
+      ctx.shadowBlur = 20;
+    }
+    
     ctx.strokeStyle = layer.color;
     ctx.fillStyle = layer.color;
-    ctx.lineWidth = layer.strokeWidth;
+    ctx.lineWidth = transform.strokeWidth;
     ctx.globalAlpha = transform.alpha;
     
     const cardinals = ['N', 'E', 'S', 'W'];
@@ -331,15 +415,20 @@ const GeometricCompassRose: React.FC<GeometricCompassRoseProps> = ({
     ctx.restore();
   };
 
-  // Draw intermediate points (half-winds)
+  // Draw intermediate points with enhanced effects
   const drawIntermediatePoints = (ctx: CanvasRenderingContext2D, centerX: number, centerY: number, layer: CompassLayer, transform: any) => {
     ctx.save();
     ctx.translate(centerX, centerY);
     ctx.rotate(transform.rotation);
     ctx.scale(transform.scale, transform.scale);
     
+    if (transform.glow) {
+      ctx.shadowColor = layer.color;
+      ctx.shadowBlur = 10;
+    }
+    
     ctx.strokeStyle = layer.color;
-    ctx.lineWidth = layer.strokeWidth;
+    ctx.lineWidth = transform.strokeWidth;
     ctx.globalAlpha = transform.alpha;
     
     const points = layer.points || 8;
@@ -363,15 +452,20 @@ const GeometricCompassRose: React.FC<GeometricCompassRoseProps> = ({
     ctx.restore();
   };
 
-  // Draw decorative circles at various radii
+  // Draw decorative circles with enhanced effects
   const drawDecorativeCircles = (ctx: CanvasRenderingContext2D, centerX: number, centerY: number, layer: CompassLayer, transform: any) => {
     ctx.save();
     ctx.translate(centerX, centerY);
     ctx.rotate(transform.rotation);
     ctx.scale(transform.scale, transform.scale);
     
+    if (transform.glow) {
+      ctx.shadowColor = layer.color;
+      ctx.shadowBlur = 8;
+    }
+    
     ctx.strokeStyle = layer.color;
-    ctx.lineWidth = layer.strokeWidth;
+    ctx.lineWidth = transform.strokeWidth;
     ctx.globalAlpha = transform.alpha;
     
     // Multiple concentric decorative circles
@@ -399,15 +493,20 @@ const GeometricCompassRose: React.FC<GeometricCompassRoseProps> = ({
     ctx.restore();
   };
 
-  // Draw detailed inner compass rose
+  // Draw inner compass rose with enhanced effects
   const drawInnerRose = (ctx: CanvasRenderingContext2D, centerX: number, centerY: number, layer: CompassLayer, transform: any) => {
     ctx.save();
     ctx.translate(centerX, centerY);
     ctx.rotate(transform.rotation);
     ctx.scale(transform.scale, transform.scale);
     
+    if (transform.glow) {
+      ctx.shadowColor = layer.color;
+      ctx.shadowBlur = 18;
+    }
+    
     ctx.strokeStyle = layer.color;
-    ctx.lineWidth = layer.strokeWidth;
+    ctx.lineWidth = transform.strokeWidth;
     ctx.globalAlpha = transform.alpha;
     
     const rays = layer.points || 32;
@@ -427,16 +526,21 @@ const GeometricCompassRose: React.FC<GeometricCompassRoseProps> = ({
     ctx.restore();
   };
 
-  // Draw central star with professional detail
+  // Draw central star with enhanced effects
   const drawCenterStar = (ctx: CanvasRenderingContext2D, centerX: number, centerY: number, layer: CompassLayer, transform: any) => {
     ctx.save();
     ctx.translate(centerX, centerY);
     ctx.rotate(transform.rotation);
     ctx.scale(transform.scale, transform.scale);
     
+    if (transform.glow) {
+      ctx.shadowColor = layer.color;
+      ctx.shadowBlur = 25;
+    }
+    
     ctx.strokeStyle = layer.color;
     ctx.fillStyle = layer.color;
-    ctx.lineWidth = layer.strokeWidth;
+    ctx.lineWidth = transform.strokeWidth;
     ctx.globalAlpha = transform.alpha;
     
     // 16-point star

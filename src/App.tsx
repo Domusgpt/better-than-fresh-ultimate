@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import NauticalCartographyBackground from './components/NauticalCartographyBackground';
-import NauticalParticleField from './components/NauticalParticleField';
+import FishSchoolParticles from './components/FishSchoolParticles';
 import OceanCurrents from './components/OceanCurrents';
 import GeometricCompassRose from './components/GeometricCompassRose';
 import { IntroSequence } from './components/IntroSequence';
@@ -56,6 +56,12 @@ const App: React.FC = () => {
   const [activeSectionIndex, setActiveSectionIndex] = useState(0);
   const [scrollProgress, setScrollProgress] = useState(0);
 
+  // Interaction states for compass rose and fish
+  const [isHovering, setIsHovering] = useState(false);
+  const [isClicked, setIsClicked] = useState(false);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [compassRotation, setCompassRotation] = useState(0);
+
   const mainRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
   const heroImageRef = useRef<HTMLImageElement>(null);
@@ -66,6 +72,24 @@ const App: React.FC = () => {
   useEffect(() => {
     setIsExpanded(!!activeCard);
   }, [activeCard]);
+
+  // Mouse tracking for interaction effects
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  // Calculate compass rotation from scroll progress and user interactions
+  useEffect(() => {
+    const baseRotation = scrollProgress * Math.PI * 4; // Multiple rotations through scroll
+    const hoverEffect = isHovering ? 0.2 : 0;
+    const clickEffect = isClicked ? 0.5 : 0;
+    setCompassRotation(baseRotation + hoverEffect + clickEffect);
+  }, [scrollProgress, isHovering, isClicked]);
 
   // Animations
   useEffect(() => {
@@ -187,6 +211,9 @@ const App: React.FC = () => {
   }, [loading]);
 
   const handleCardClick = (card: StoryCard, index: number) => {
+    setIsClicked(true);
+    setTimeout(() => setIsClicked(false), 300); // Brief click effect
+
     const el = cardsRef.current[index];
     if (el) {
       const rect = el.getBoundingClientRect();
@@ -203,6 +230,8 @@ const App: React.FC = () => {
   };
 
   const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
+    setIsHovering(true);
+
     const inner = e.currentTarget.querySelector('.card-inner');
     if (inner) {
         gsap.to(inner, {
@@ -216,6 +245,8 @@ const App: React.FC = () => {
   };
 
   const handleMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
+    setIsHovering(false);
+
     const inner = e.currentTarget.querySelector('.card-inner');
     if (inner) {
         gsap.to(inner, {
@@ -231,7 +262,7 @@ const App: React.FC = () => {
   return (
     <div className="relative min-h-screen font-sans text-parchment selection:bg-gold-500 selection:text-navy-950 perspective-[2000px] overflow-x-hidden" style={{ backgroundColor: '#020c1b' }}>
       
-      {/* Layered Nautical Background System - Emergence from Pure Black */}
+      {/* Enhanced Nautical Background System - Emergence from Pure Black */}
       <NauticalCartographyBackground
         scrollProgress={scrollProgress}
         sectionIndex={activeSectionIndex}
@@ -240,13 +271,20 @@ const App: React.FC = () => {
         intensity={0.8}
         scrollProgress={scrollProgress}
       />
-      <NauticalParticleField
-        density={150}
+      <FishSchoolParticles
         scrollProgress={scrollProgress}
+        sectionIndex={activeSectionIndex}
+        compassRotation={compassRotation}
+        isHovering={isHovering}
+        isClicked={isClicked}
       />
       <GeometricCompassRose
         scrollProgress={scrollProgress}
         sectionIndex={activeSectionIndex}
+        isHovering={isHovering}
+        isClicked={isClicked}
+        isExpanded={isExpanded}
+        mousePosition={mousePosition}
       />
       <DepthGauge />
 
